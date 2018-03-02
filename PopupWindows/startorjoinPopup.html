@@ -2,11 +2,14 @@
   <head>
     <title>Chrome Video Synchronizer</title>
     <link rel="stylesheet" href="basic.css">
-    <script src="startorjoinPopup.js"></script>
+	<script src="mainController.js"></script>
   </head>
 
-  <body>
-    <h1>What would you like to do?</h1>
+  <body onload="readVars()">
+    <h1 id="usergreeting"></h1>
+	<script>
+	  document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
+	</script>
 	<div id="sessioninfo">
 	<label>Please make a selection:</label>
 	</div>

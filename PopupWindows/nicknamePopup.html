@@ -2,18 +2,18 @@
   <head>
     <title>Chrome Video Synchronizer</title>
     <link rel="stylesheet" href="basic.css">
-    <script src="nicknamePopup.js"></script>
+	<script src="mainController.js"></script>
   </head>
 
-  <body>
+  <body onload="readVars()">
     <h1>Welcome!</h1>
-	<div id="sessioninfo">
+	<div id="nicknameBlock">
 	<label>Enter a nickname:</label>
 	</div>
 	<div id="namebox">
-	  <form action="/action_page.php">
-        <input type="text" name="fname"><br>
-        <input type="submit" value="Submit">
+	  <form onsubmit="return false;">
+        <input type="text" name="fname" id="nameInput"><br>
+        <input type="submit" value="Submit" onclick="createNickname();">
       </form>
 	</div>
   </body>
