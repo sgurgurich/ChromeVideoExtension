@@ -6,7 +6,7 @@ var myNickname;
 
 function readVars(){
 	myNickname = getCookie("myNickname");
-	
+	document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
 }
 
 function getCookie(cname){
