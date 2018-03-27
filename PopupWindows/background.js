@@ -1,4 +1,4 @@
-// mainController.js
+// background.js
 // Stefan Gurgurich
 // Zach Adam
 
