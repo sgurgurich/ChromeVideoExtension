@@ -8,6 +8,11 @@ var myNickname;
 var mySessionID;
 //var currentPage;
 
+var script = document.createElement('script');
+script.src = 'https://code.jquery.com/jquery-1.11.0.min.js';
+script.type = 'text/javascript';
+document.getElementsByTagName('head')[0].appendChild(script);
+
 
 function getCookie(cname){
 	var name = cname + "=";
@@ -43,12 +48,6 @@ function createNickname(){
 		document.getElementById("nameError").style.display = "block";
 	}
 
-  //currentPage = "page2";
-
-	//chrome.storage.sync.set({'pageID': currentPage}, function() {
-	//					console.log('Value is set to ' + currentPage);
-	//				});
-
 }
 
 function joinSession(){
@@ -62,6 +61,10 @@ function createSession(){
 	// Bring me to session page
   document.getElementById("page2").style.display = "none";
 	document.getElementById("page4").style.display = "block";
+  generateSessionID();
+	loadCurrentSession();
+
+
 }
 
 function submitSessionID(){
@@ -70,13 +73,16 @@ function submitSessionID(){
 
   //First, check to see if the session ID entered is even valid
   mySessionID = document.getElementById("sessInput").value;
+
   if (mySessionID.length == 8){
 		// TODO: Add if-statement to check database for this IDs
-		if (querySessionID==true){
+		if (querySessionID()==true){
 			document.getElementById("page3").style.display = "none";
 			document.getElementById("page4").style.display = "block";
+			loadCurrentSession();
 		}
     else{
+			document.getElementById("sessIDError").style.display = "none";
       document.getElementById("sessNotFound").style.display = "block";
 		}
 	}
@@ -90,16 +96,96 @@ function submitSessionID(){
 // DATABASE/SERVER FUNCTIONS
 function querySessionID(){
   // Check the database to see if the session ID is valid
-	return true;
+	return(true);
 }
+
+function loadCurrentSession(){
+  document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
+  loadParty();
+}
+
+function loadParty(){
+		document.getElementById("user1").innerHTML = myNickname;
+
+		// TODO: We will get these from the Database
+		document.getElementById("user2").innerHTML = "";
+		document.getElementById("user3").innerHTML = "";
+		document.getElementById("user4").innerHTML = "";
+		document.getElementById("user5").innerHTML = "";
+}
+
+//TODO: Maybe the server should do this?
+function generateSessionID(){
+  var firstChar = (Math.floor(Math.random() * 10)).toString();
+  var secondChar = (Math.floor(Math.random() * 10)).toString();
+  var thirdChar = (Math.floor(Math.random() * 10)).toString();
+  var fourthChar = (Math.floor(Math.random() * 10)).toString();
+  var fifthChar = (Math.floor(Math.random() * 10)).toString();
+  var sixthChar = (Math.floor(Math.random() * 10)).toString();
+  var seventhChar = (Math.floor(Math.random() * 10)).toString();
+  var eighthChar = (Math.floor(Math.random() * 10)).toString();
+
+  mySessionID = firstChar + secondChar + thirdChar + fourthChar + fifthChar + sixthChar + seventhChar + eighthChar;
+
+}
+
+
+
+function playVideo(){
+
+	var tab;
+	var url;
+
+	chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    tab = tabs[0];
+    url = tab.url;
+  });
+
+	var injectionCode = ['var script = document.createElement(\'script\');',
+											'script.src = \'https://code.jquery.com/jquery-1.11.0.min.js\';',
+											'script.type = \'text/javascript\';',
+											'document.getElementsByTagName(\'head\')[0].appendChild(script); ',
+											'document.getElementsByTagName(\'video\')[0].play();'].join('\n');
+
+  chrome.tabs.executeScript(tab, {code:injectionCode});
+
+}
+
+function pauseVideo(){
+
+	var tab;
+	var url;
+
+	chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    tab = tabs[0];
+    url = tab.url;
+  });
+
+	var injectionCode = ['var script = document.createElement(\'script\');',
+											'script.src = \'https://code.jquery.com/jquery-1.11.0.min.js\';',
+											'script.type = \'text/javascript\';',
+											'document.getElementsByTagName(\'head\')[0].appendChild(script); ',
+											'document.getElementsByTagName(\'video\')[0].pause();'].join('\n');
+
+  chrome.tabs.executeScript(tab, {code:injectionCode});
+}
+
+
+
 
 
 // Action Listner
 // This is triggered when the page or extension loads for the first time]
 // It is basically a constructor for the webpage
 
-document.addEventListener('DOMContentLoaded', () => {
-//	bgWindow = chrome.extension.getBackgroundPage();
+  document.addEventListener('DOMContentLoaded', () => {
+  //	bgWindow = chrome.extension.getBackgroundPage();
   currentPage = "page1";
 
 	// Set the default page states
@@ -113,30 +199,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("sessNotFound").style.display = "none";
 	document.getElementById("page4").style.display = "none";
 
-
-//  chrome.storage.sync.get(['pageID'], function(result) {
-//		                         currentPage = result.key;
-	//                       });
-
-	//currentPage = bgWindow.document.getElementById("pageID");
-
-
   document.getElementById(currentPage).style.display = "block";
-
 
 	// Activate other action listeners
 	document.getElementById("submitName").addEventListener("click", createNickname);
 	document.getElementById("joinSess").addEventListener("click", joinSession);
 	document.getElementById("createSess").addEventListener("click", createSession);
 	document.getElementById("submitID").addEventListener("click", submitSessionID);
+
+	document.getElementById("playBt").addEventListener("click", playVideo);
+	document.getElementById("pauseBt").addEventListener("click", pauseVideo);
 });
 
 document.addEventListener("beforeunload", function(e){
-    //bgWindow.getElementById("pageID").value = currentPage;
 
-	//	chrome.storage.sync.set({'pageID': currentPage}, function() {
-		//          console.log('Value is set to ' + currentPage);
-	//	        });
-
-
- });
+});

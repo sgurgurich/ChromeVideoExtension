@@ -15,15 +15,15 @@
       </label>
     </div>
 	  <label>Enter a nickname:</label>
-    <input type="text" name="fname" id="nameInput"><br>
+    <p class="big"><input type="text" name="fname" id="nameInput"></p>
     <button type="button" id="submitName">Submit</button>
   </div>
 
   <div id = "page2">
     <h1 id="usergreeting"></h1>
 	<label>Please make a selection:</label>
-	<button type="button" id="createSess">Create a Session</button>
-	<button type="button" id="joinSess">Join a Session</button>
+	<p class="big"><button type="button" id="createSess">Create a Session</button></p>
+	<p class="big"><button type="button" id="joinSess">Join a Session</button></p>
   </div>
 
   <div id="page3">
@@ -39,23 +39,23 @@
       </label>
     </div>
 	<label>Enter a Session ID:</label>
-    <input type="text" name="sessName" id="sessInput"><br>
+    <p class="big"><input type="text" name="sessName" id="sessInput"></p>
     <button type="button" id="submitID">Submit</button>
   </div>
 
   <div id="page4">
     <h1>Your Current Session</h1>
-	<label>Session ID: xA28UnM</label>
+	<label id="currSession"></label>
     <p><button type="button" id="playBt">Play</button></p>
     <p><button type="button" id="pauseBt">Pause</button></p>
 	<div id="userparty">
 	  <label>Your Party:</label>
       <ul>
-        <li>User1</li>
-        <li>User2</li>
-        <li>User3</li>
-		<li>User4</li>
-		<li>User5</li>
+        <li id="user1"></li>
+        <li id="user2"></li>
+        <li id="user3"></li>
+		    <li id="user4"></li>
+		    <li id="user5"></li>
       </ul>
 	</div>
   </div>

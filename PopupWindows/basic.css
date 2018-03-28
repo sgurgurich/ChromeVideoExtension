@@ -13,7 +13,25 @@ div {
     text-align: center;
 }
 
-p {
+p.big {
     font-family: verdana;
     font-size: 20px;
+    line-height: 1.4;
+}
+
+p.small {
+    font-family: verdana;
+    font-size: 20px;
+    line-height: .8
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 6px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
 }
