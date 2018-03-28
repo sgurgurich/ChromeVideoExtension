@@ -1,6 +1,8 @@
 // mainController.js
 // Stefan Gurgurich
 // Zach Adam
+// Trim Ballanca
+// John Cutsavage
 
 var myNickname;
 //var currentPage;
@@ -33,6 +35,12 @@ function createNickname(){
 	document.getElementById("page1").style.display = "none";
 	document.getElementById("page2").style.display = "block";
 
+  //currentPage = "page2";
+
+	//chrome.storage.sync.set({'pageID': currentPage}, function() {
+	//					console.log('Value is set to ' + currentPage);
+	//				});
+
 }
 
 function joinSession(){
@@ -60,8 +68,8 @@ function submitSessionID(){
 // It is basically a constructor for the webpage
 
 document.addEventListener('DOMContentLoaded', () => {
-	//bgWindow = chrome.extension.getBackgroundPage();
-//  currentPage = "page1";
+//	bgWindow = chrome.extension.getBackgroundPage();
+  currentPage = "page1";
 
 	// Set the default page states
 	document.getElementById("page1").style.display = "block";
@@ -70,11 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById("page4").style.display = "none";
 
 
+//  chrome.storage.sync.get(['pageID'], function(result) {
+//		                         currentPage = result.key;
+	//                       });
+
 	//currentPage = bgWindow.document.getElementById("pageID");
 
-//  if (currentPage != null){
-//	document.getElementById(currentPage).style.display = "block";
-//}
+
+  document.getElementById(currentPage).style.display = "block";
+
 
 	// Activate other action listeners
 	document.getElementById("submitName").addEventListener("click", createNickname);
@@ -83,7 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById("submitID").addEventListener("click", submitSessionID);
 });
 
-//document.addEventListener("beforeunload", function(e){
-//    var bgNickname = bgWindow.document.createTextNode("page3");
-//  	bgNickname.createAttribute("id=pageID");
- //});
+document.addEventListener("beforeunload", function(e){
+    //bgWindow.getElementById("pageID").value = currentPage;
+
+	//	chrome.storage.sync.set({'pageID': currentPage}, function() {
+		//          console.log('Value is set to ' + currentPage);
+	//	        });
+
+
+ });

@@ -5,13 +5,17 @@
   "description": "This extension allows the user to change the background color of the current page.",
   "version": "1.0",
 
+  "permissions": [
+    "storage"
+  ],
+
   "background": {
     "scripts": [
       "mainController.js",
-	  "background.js"
+	    "background.js"
     ]
   },
-  
+
 
   "browser_action": {
     "default_icon": "icon.png",
