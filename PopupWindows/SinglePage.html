@@ -9,25 +9,40 @@
   <body>
   <div id = "page1">
     <h1>Welcome!</h1>
-	<label>Enter a nickname:</label>
+    <div id="nameError">
+      <label>
+        <font color="red">ERROR: nickname must be at least 3 characters!</font>
+      </label>
+    </div>
+	  <label>Enter a nickname:</label>
     <input type="text" name="fname" id="nameInput"><br>
     <button type="button" id="submitName">Submit</button>
   </div>
-  
+
   <div id = "page2">
     <h1 id="usergreeting"></h1>
 	<label>Please make a selection:</label>
 	<button type="button" id="createSess">Create a Session</button>
 	<button type="button" id="joinSess">Join a Session</button>
   </div>
-  
+
   <div id="page3">
     <h1>You're ready to join a session!</h1>
+    <div id="sessIDError">
+      <label>
+        <font color="red">ERROR: sessionID must be 8 characters!</font>
+      </label>
+    </div>
+    <div id="sessNotFound">
+      <label>
+        <font color="red">ERROR: session not found!</font>
+      </label>
+    </div>
 	<label>Enter a Session ID:</label>
-    <input type="text" name="sessName"><br>
+    <input type="text" name="sessName" id="sessInput"><br>
     <button type="button" id="submitID">Submit</button>
   </div>
-  
+
   <div id="page4">
     <h1>Your Current Session</h1>
 	<label>Session ID: xA28UnM</label>
@@ -41,7 +56,7 @@
         <li>User3</li>
 		<li>User4</li>
 		<li>User5</li>
-      </ul>  
+      </ul>
 	</div>
   </div>
   </body>

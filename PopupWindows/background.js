@@ -17,6 +17,4 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionID = document.createTextNode("00000000");
     sessionID.createAttribute("id=sessionID");
 
-
-
 });
