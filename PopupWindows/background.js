@@ -54,8 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
-
-
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.msg === "update_nickname") {
@@ -68,17 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mySessionID = request.data.subject;
       }
     });
-
-
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "logThis") {
-        testLog(request.data.subject);
-      }
-    });
-
-
 
   var intervalID = setInterval(checkForUpdates, 2000);
 

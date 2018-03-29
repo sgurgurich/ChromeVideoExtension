@@ -308,11 +308,3 @@ document.addEventListener('DOMContentLoaded', () => {
   startButtonActionListeners();
   disableErrors();
 });
-/*
-chrome.runtime.sendMessage({
-  msg: "logThis",
-  data: {
-    subject: "I'm Here " + response.data
-  }
-});
-*/
