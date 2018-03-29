@@ -3,18 +3,55 @@
 // Zach Adam
 
 var myNickname;
-var currentPage;
-var sessionID;
+var myCurrentPage;
+var mySessionID;
+
+function checkForUpdates(){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {greeting: "anyNickname"}, function(response) {
+        myNickname = response.farewell;
+      });
+    });
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {greeting: "whatPage"}, function(response) {
+        myNickname = response.farewell;
+      });
+    });
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {greeting: "whatSession"}, function(response) {
+        myNickname = response.farewell;
+      });
+    });
+}
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    myNickname = document.createTextNode("DEFAULT_NICKNAME");
-    myNickname.createAttribute("id=nickname");
+  myNickname = "";
+  myCurrentPage = "page1";
+  mySessionID = "";
 
-    currentPage = document.createTextNode("page1");
-    currentPage.createAttribute("id=pageID");
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.greeting == "anyNickname")
+        sendResponse({farewell: myNickname});
+    });
 
-    sessionID = document.createTextNode("00000000");
-    sessionID.createAttribute("id=sessionID");
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.greeting == "whatPage")
+        sendResponse({farewell: myCurrentPage});
+    });
+
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.greeting == "whatSession")
+        sendResponse({farewell: mySessionID});
+    });
+
+   var intervalID = setInterval(checkForUpdates, 500);
 
 });

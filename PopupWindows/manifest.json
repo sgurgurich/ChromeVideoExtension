@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
-  "description": "This extension allows the user to change the background color of the current page.",
+  "name": "Chrome Video Sychronizer",
+  "description": "This extension will sync the videos of multiple users",
   "version": "1.0",
 
   "permissions": [
@@ -10,19 +10,22 @@
     "tabs"
   ],
 
+  "content_scripts": [
+  {
+    "js": ["mainController.js"]
+  }
+],
+
   "background": {
     "scripts": [
-      "mainController.js",
-	    "background.js"
+      "background.js"
     ]
   },
-
 
   "browser_action": {
     "default_icon": "SyncIcon.png",
     "default_popup": "SinglePage.html"
   },
-
 
   "permissions": [
     "activeTab",

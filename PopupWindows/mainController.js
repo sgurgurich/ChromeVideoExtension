@@ -6,7 +6,7 @@
 
 var myNickname;
 var mySessionID;
-//var currentPage;
+var myCurrentPage;
 
 var script = document.createElement('script');
 script.src = 'https://code.jquery.com/jquery-1.11.0.min.js';
@@ -42,17 +42,23 @@ function createNickname(){
 		document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
 		document.getElementById("page1").style.display = "none";
 		document.getElementById("page2").style.display = "block";
+		myCurrentPage = "page2";
 	}
 	else{
     //Display page1 again but with the INVALID NAME error
 		document.getElementById("nameError").style.display = "block";
 	}
 
+	chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+		console.log(response.farewell);
+	});
+
 }
 
 function joinSession(){
   document.getElementById("page2").style.display = "none";
 	document.getElementById("page3").style.display = "block";
+	myCurrentPage = "page3";
 }
 
 function createSession(){
@@ -61,6 +67,7 @@ function createSession(){
 	// Bring me to session page
   document.getElementById("page2").style.display = "none";
 	document.getElementById("page4").style.display = "block";
+	myCurrentPage = "page4";
   generateSessionID();
 	loadCurrentSession();
 
@@ -129,8 +136,6 @@ function generateSessionID(){
 
 }
 
-
-
 function playVideo(){
 
 	var tab;
@@ -176,8 +181,10 @@ function pauseVideo(){
   chrome.tabs.executeScript(tab, {code:injectionCode});
 }
 
+function goToPage(page){
 
 
+}
 
 
 // Action Listner
@@ -209,6 +216,45 @@ function pauseVideo(){
 
 	document.getElementById("playBt").addEventListener("click", playVideo);
 	document.getElementById("pauseBt").addEventListener("click", pauseVideo);
+
+  // CONTENT PAGE REQUESTING BACKGROUND DATA
+	chrome.runtime.sendMessage({greeting: "anyNickname"}, function(response) {
+		myNickname = response.farewell;
+    console.log(response.farewell);
+  });
+
+	chrome.runtime.sendMessage({greeting: "whatPage"}, function(response) {
+		myCurrentPage = response.farewell;
+		console.log(response.farewell);
+	});
+
+	chrome.runtime.sendMessage({greeting: "whatSession"}, function(response) {
+		mySessionID = response.farewell;
+		console.log(response.farewell);
+	});
+
+  // LISTENERS FOR REQUESTS FROM BACKGROUND
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.greeting == "anyNickname")
+				sendResponse({farewell: myNickname});
+		});
+
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.greeting == "whatPage")
+				sendResponse({farewell: myCurrentPage});
+		});
+
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.greeting == "whatSession")
+				sendResponse({farewell: mySessionID});
+		});
+
+
+
+
 });
 
 document.addEventListener("beforeunload", function(e){

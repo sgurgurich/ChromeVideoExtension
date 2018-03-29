@@ -35,3 +35,14 @@ button {
     display: inline-block;
     font-size: 14px;
 }
+
+button:active {
+  background-color: #9A33FF; /* Green */
+  border: none;
+  color: white;
+  padding: 6px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
