@@ -7,6 +7,7 @@
 var myNickname;
 var mySessionID;
 var myCurrentPage;
+var x;
 
 function createNickname() {
   // Get my nickname and ADD it to database
@@ -187,7 +188,6 @@ function goToCurrentPage() {
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
       document.getElementById("page4").style.display = "none";
-      break;
   }
   // Set the default page states
 }
@@ -221,6 +221,20 @@ function loadValuesFromBG() {
   chrome.runtime.sendMessage({
     msg: "request_sessionidFG"
   });
+
+  chrome.runtime.sendMessage({
+    msg: "logThis",
+    data: {
+      subject: "I'm Here " + myCurrentPage
+    }
+  });
+
+
+}
+
+function addPage(page) {
+  myCurrentPage = page;
+
 }
 
 function sendDataToBackground() {
@@ -254,22 +268,14 @@ function sendDataToBackground() {
 // It is basically a constructor for the webpage
 document.addEventListener('DOMContentLoaded', () => {
 
-	chrome.runtime.onMessage.addListener(
+  chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.msg === "update_nicknameFG") {
         myNickname = request.data.subject;
       }
-    });
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
       if (request.msg === "update_pageFG") {
         myCurrentPage = request.data.subject;
       }
-    });
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
       if (request.msg === "update_sessionidFG") {
         mySessionID = request.data.subject;
       }
@@ -277,6 +283,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadValuesFromBG();
   goToCurrentPage();
-	startButtonActionListeners();
-	disableErrors();
+  startButtonActionListeners();
+  disableErrors();
 });
+/*
+chrome.runtime.sendMessage({
+  msg: "logThis",
+  data: {
+    subject: "I'm Here " + response.data
+  }
+});
+*/

@@ -9,9 +9,17 @@
     "tabs"
   ],
 
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "css": ["basic.css"],
+      "js": ["mainController.js"]
+    }
+  ],
+
   "background": {
     "scripts": [
-      "mainController.js",
       "background.js"
     ]
   },

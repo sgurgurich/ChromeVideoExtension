@@ -15,23 +15,19 @@ function checkForUpdates() {
   console.log(mySessionID);
 }
 
+function testLog(log) {
+  console.log(log);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
-  myNickname = "";
+  myNickname = " ";
   myCurrentPage = "page1";
-  mySessionID = "";
-
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "update_nickname") {
-        myNickname = request.data.subject;
-      }
-    });
+  mySessionID = " ";
 
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-      if (request.msg === "request_nicknameFG") {
+      if (request.msg == "request_nicknameFG") {
         chrome.runtime.sendMessage({
           msg: "update_nicknameFG",
           data: {
@@ -39,18 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-    });
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "update_page") {
-        myCurrentPage = request.data.subject;
-      }
-    });
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "request_pageFG") {
+      if (request.msg == "request_pageFG") {
         chrome.runtime.sendMessage({
           msg: "update_pageFG",
           data: {
@@ -58,18 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-    });
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "update_sessionid") {
-        mySessionID = request.data.subject;
-      }
-    });
-
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "request_sessionidFG") {
+      if (request.msg == "request_sessionidFG") {
         chrome.runtime.sendMessage({
           msg: "update_sessionidFG",
           data: {
@@ -77,9 +51,35 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+
     });
 
 
-  //var intervalID = setInterval(checkForUpdates, 2000);
+
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.msg === "update_nickname") {
+        myNickname = request.data.subject;
+      }
+      if (request.msg === "update_page") {
+        myCurrentPage = request.data.subject;
+      }
+      if (request.msg === "update_sessionid") {
+        mySessionID = request.data.subject;
+      }
+    });
+
+
+
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.msg === "logThis") {
+        testLog(request.data.subject);
+      }
+    });
+
+
+
+  var intervalID = setInterval(checkForUpdates, 2000);
 
 });
