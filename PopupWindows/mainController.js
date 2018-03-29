@@ -157,31 +157,56 @@ function pauseVideo() {
   });
 }
 
-function goToCurrentPage(page) {
-  switch (page) {
-    case "page1":
-      document.getElementById("page1").style.display = "block";
+function loadPage1(){
+	  document.getElementById("page1").style.display = "block";
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "none";
-      break;
-    case "page2":
+}
+
+function loadPage2(){
       document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "block";
       document.getElementById("page3").style.display = "none";
-      document.getElementById("page4").style.display = "none";
-      break;
-    case "page3":
-      document.getElementById("page1").style.display = "none";
+      document.getElementById("page4").style.display = "none";	
+}
+
+function loadPage3(){
+	  document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
       document.getElementById("page4").style.display = "none";
-      break;
-    case "page4":
-      document.getElementById("page1").style.display = "none";
+}
+
+function loadPage4(){
+	  document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "block";
+}
+
+function loadNicknameElements(name){
+	document.getElementById("usergreeting").innerHTML = "Hey " + name;
+	document.getElementById("user1").innerHTML = name;
+}
+
+function loadSessionIdElements(sessId){
+	document.getElementById("currSession").innerHTML = "Session ID: " + sessId;
+}
+
+function goToCurrentPage(page) {
+  switch (page) {
+    case "page1":
+	  loadPage1();
+      break;
+    case "page2":
+	  loadPage2();
+      break;
+    case "page3":
+	  loadPage3();
+      break;
+    case "page4":
+	  loadPage4();
       break;
     default:
       document.getElementById("page1").style.display = "block";
@@ -269,19 +294,17 @@ document.addEventListener('DOMContentLoaded', () => {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.msg === "update_nicknameFG") {
-        myNickname = request.data.subject;
+        loadNicknameElements(request.data.subject);
       }
       if (request.msg === "update_pageFG") {
         goToCurrentPage(request.data.subject);
-
       }
       if (request.msg === "update_sessionidFG") {
-        mySessionID = request.data.subject;
+        loadSessionIdElements(request.data.subject);
       }
     });
 
   loadValuesFromBG();
-//  goToCurrentPage();
   startButtonActionListeners();
   disableErrors();
 });
