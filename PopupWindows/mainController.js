@@ -200,10 +200,8 @@ function goToCurrentPage(page) {
 	  loadPage1();
       break;
     case "page2":
-	  loadPage2();
-      break;
     case "page3":
-	  loadPage3();
+	  loadPage2();
       break;
     case "page4":
 	  loadPage4();
@@ -287,9 +285,7 @@ function sendDataToBackground() {
 // It is basically a constructor for the webpage
 document.addEventListener('DOMContentLoaded', () => {
 
-  myNickname = " ";
   myCurrentPage = "page1";
-  mySessionID = " ";
 
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
