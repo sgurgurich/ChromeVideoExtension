@@ -1,0 +1,9 @@
+var express = require('express'),
+  app = express(),
+  port = process.env.PORT || 3000;
+
+
+app.listen(port);
+
+console.log('Chrome Video Extension Service RESTful API server started on: ' + port);
+
