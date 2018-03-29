@@ -157,8 +157,8 @@ function pauseVideo() {
   });
 }
 
-function goToCurrentPage() {
-  switch (myCurrentPage) {
+function goToCurrentPage(page) {
+  switch (page) {
     case "page1":
       document.getElementById("page1").style.display = "block";
       document.getElementById("page2").style.display = "none";
@@ -228,14 +228,8 @@ function loadValuesFromBG() {
       subject: "I'm Here " + myCurrentPage
     }
   });
-
-
 }
 
-function addPage(page) {
-  myCurrentPage = page;
-
-}
 
 function sendDataToBackground() {
   // Send values to background
@@ -268,13 +262,18 @@ function sendDataToBackground() {
 // It is basically a constructor for the webpage
 document.addEventListener('DOMContentLoaded', () => {
 
+  myNickname = " ";
+  myCurrentPage = "page1";
+  mySessionID = " ";
+
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.msg === "update_nicknameFG") {
         myNickname = request.data.subject;
       }
       if (request.msg === "update_pageFG") {
-        myCurrentPage = request.data.subject;
+        goToCurrentPage(request.data.subject);
+
       }
       if (request.msg === "update_sessionidFG") {
         mySessionID = request.data.subject;
@@ -282,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
   loadValuesFromBG();
-  goToCurrentPage();
+//  goToCurrentPage();
   startButtonActionListeners();
   disableErrors();
 });
