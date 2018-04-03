@@ -158,7 +158,7 @@ function pauseVideo() {
 }
 
 function loadPage1(){
-	  document.getElementById("page1").style.display = "block";
+	    document.getElementById("page1").style.display = "block";
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "none";
@@ -168,7 +168,7 @@ function loadPage2(){
       document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "block";
       document.getElementById("page3").style.display = "none";
-      document.getElementById("page4").style.display = "none";	
+      document.getElementById("page4").style.display = "none";
 }
 
 function loadPage3(){
@@ -230,6 +230,27 @@ function startButtonActionListeners() {
 
   document.getElementById("playBt").addEventListener("click", playVideo);
   document.getElementById("pauseBt").addEventListener("click", pauseVideo);
+
+  document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
+}
+
+function leaveCurrentSession(){
+
+  chrome.runtime.sendMessage({
+    msg: "update_sessionid",
+    data: {
+      subject: ""
+    }
+  });
+
+  chrome.runtime.sendMessage({
+    msg: "update_page",
+    data: {
+      subject: "page2"
+    }
+  });
+
+  loadValuesFromBG();
 }
 
 function loadValuesFromBG() {
@@ -243,13 +264,6 @@ function loadValuesFromBG() {
 
   chrome.runtime.sendMessage({
     msg: "request_sessionidFG"
-  });
-
-  chrome.runtime.sendMessage({
-    msg: "logThis",
-    data: {
-      subject: "I'm Here " + myCurrentPage
-    }
   });
 }
 
