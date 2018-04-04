@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-      if (request.msg === "update_nickname") {
+      if (request.msg === "update_nickname" && myNickname == " ") {
         myNickname = request.data.subject;
       }
       if (request.msg === "update_page") {

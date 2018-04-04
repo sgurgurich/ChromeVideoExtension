@@ -157,54 +157,60 @@ function pauseVideo() {
   });
 }
 
-function loadPage1(){
-	    document.getElementById("page1").style.display = "block";
-      document.getElementById("page2").style.display = "none";
-      document.getElementById("page3").style.display = "none";
-      document.getElementById("page4").style.display = "none";
+function loadPage1() {
+  document.getElementById("page1").style.display = "block";
+  document.getElementById("page2").style.display = "none";
+  document.getElementById("page3").style.display = "none";
+  document.getElementById("page4").style.display = "none";
 }
 
-function loadPage2(){
-      document.getElementById("page1").style.display = "none";
-      document.getElementById("page2").style.display = "block";
-      document.getElementById("page3").style.display = "none";
-      document.getElementById("page4").style.display = "none";
+function loadPage2() {
+  document.getElementById("page1").style.display = "none";
+  document.getElementById("page2").style.display = "block";
+  document.getElementById("page3").style.display = "none";
+  document.getElementById("page4").style.display = "none";
+  loadValuesFromBG();
 }
 
-function loadPage3(){
-	  document.getElementById("page1").style.display = "none";
-      document.getElementById("page2").style.display = "none";
-      document.getElementById("page3").style.display = "block";
-      document.getElementById("page4").style.display = "none";
+function loadPage3() {
+  document.getElementById("page1").style.display = "none";
+  document.getElementById("page2").style.display = "none";
+  document.getElementById("page3").style.display = "block";
+  document.getElementById("page4").style.display = "none";
+  loadValuesFromBG();
 }
 
-function loadPage4(){
-	  document.getElementById("page1").style.display = "none";
-      document.getElementById("page2").style.display = "none";
-      document.getElementById("page3").style.display = "none";
-      document.getElementById("page4").style.display = "block";
+function loadPage4() {
+  document.getElementById("page1").style.display = "none";
+  document.getElementById("page2").style.display = "none";
+  document.getElementById("page3").style.display = "none";
+  document.getElementById("page4").style.display = "block";
+  loadValuesFromBG();
 }
 
-function loadNicknameElements(name){
-	document.getElementById("usergreeting").innerHTML = "Hey " + name;
-	document.getElementById("user1").innerHTML = name;
+function loadNicknameElements(name) {
+  document.getElementById("usergreeting").innerHTML = "Hey " + name;
+  document.getElementById("user1").innerHTML = name;
 }
 
-function loadSessionIdElements(sessId){
-	document.getElementById("currSession").innerHTML = "Session ID: " + sessId;
+
+function loadSessionIdElements(sessId) {
+  document.getElementById("currSession").innerHTML = "Session ID: " + sessId;
 }
 
 function goToCurrentPage(page) {
   switch (page) {
     case "page1":
-	  loadPage1();
+      loadPage1();
       break;
     case "page2":
+      loadPage2();
+      break;
     case "page3":
-	  loadPage2();
+      loadPage3();
       break;
     case "page4":
-	  loadPage4();
+      loadPage4();
       break;
     default:
       document.getElementById("page1").style.display = "block";
@@ -234,7 +240,7 @@ function startButtonActionListeners() {
   document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
 }
 
-function leaveCurrentSession(){
+function leaveCurrentSession() {
 
   chrome.runtime.sendMessage({
     msg: "update_sessionid",
@@ -266,7 +272,6 @@ function loadValuesFromBG() {
     msg: "request_sessionidFG"
   });
 }
-
 
 function sendDataToBackground() {
   // Send values to background
