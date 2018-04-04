@@ -162,6 +162,7 @@ function loadPage1() {
   document.getElementById("page2").style.display = "none";
   document.getElementById("page3").style.display = "none";
   document.getElementById("page4").style.display = "none";
+  myCurrentPage = "page1";
 }
 
 function loadPage2() {
@@ -169,6 +170,7 @@ function loadPage2() {
   document.getElementById("page2").style.display = "block";
   document.getElementById("page3").style.display = "none";
   document.getElementById("page4").style.display = "none";
+  myCurrentPage = "page2";
   loadValuesFromBG();
 }
 
@@ -177,6 +179,7 @@ function loadPage3() {
   document.getElementById("page2").style.display = "none";
   document.getElementById("page3").style.display = "block";
   document.getElementById("page4").style.display = "none";
+  myCurrentPage = "page3";
   loadValuesFromBG();
 }
 
@@ -185,6 +188,7 @@ function loadPage4() {
   document.getElementById("page2").style.display = "none";
   document.getElementById("page3").style.display = "none";
   document.getElementById("page4").style.display = "block";
+  myCurrentPage = "page4";
   loadValuesFromBG();
 }
 
@@ -234,6 +238,8 @@ function startButtonActionListeners() {
   document.getElementById("createSess").addEventListener("click", createSession);
   document.getElementById("submitID").addEventListener("click", submitSessionID);
 
+  document.getElementById("back2").addEventListener("click", goBackToP1);
+  document.getElementById("back3").addEventListener("click", goBackToP2);
   document.getElementById("playBt").addEventListener("click", playVideo);
   document.getElementById("pauseBt").addEventListener("click", pauseVideo);
 
@@ -248,6 +254,30 @@ function leaveCurrentSession() {
       subject: ""
     }
   });
+
+  chrome.runtime.sendMessage({
+    msg: "update_page",
+    data: {
+      subject: "page2"
+    }
+  });
+
+  loadValuesFromBG();
+}
+
+function goBackToP1() {
+
+  chrome.runtime.sendMessage({
+    msg: "update_page",
+    data: {
+      subject: "page1"
+    }
+  });
+
+  loadValuesFromBG();
+}
+
+function goBackToP2() {
 
   chrome.runtime.sendMessage({
     msg: "update_page",
