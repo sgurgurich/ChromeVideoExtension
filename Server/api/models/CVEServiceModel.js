@@ -3,9 +3,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
-  id : int,
-  isBuffering : boolean,
-  isPlaying: boolean,
+  id : Number,
+  isBuffering : Boolean,
+  isPlaying: Boolean,
   lastActivity: {
     type: Date,
     default: Date.now
@@ -14,14 +14,14 @@ var SessionSchema = new Schema({
 });
 
 var SessionUsersSchema = new Schema({
-  id : int,
-  sessionId: int,
+  id : Number,
+  sessionId: Number,
   nickname: String,
   isPageLoaded: Boolean
 });
 
 var UserSchema = new Schema({
-  id : int,
+  id : Number,
   nickname : String,
   lastConnected : {
     type: Date,
