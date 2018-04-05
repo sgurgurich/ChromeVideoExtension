@@ -1,8 +1,10 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  Task = mongoose.model('Tasks');
-
+  Task = mongoose.model('Tasks'),
+  User = mongoose.model('User'),
+  Session = mongoose.model('Session'),
+  SessionUsers = mongoose.model('SessionUsers');
 exports.list_all_tasks = function(req, res) {
   Task.find({}, function(err, task) {
     if (err)
@@ -43,5 +45,27 @@ exports.delete_a_task = function(req, res) {
     if (err)
       res.send(err);
     res.json({ message: 'Task successfully deleted' });
+  });
+};
+
+
+//Chrome Video Extension Routes
+
+
+exports.add_user = function(req, res) {
+  var new_user = new User({nickname: req.params.nickname});
+  console.log(new_user);
+  new_user.save(function(err, user) {
+    if (err)
+      res.send(err);
+    res.json(user);
+  });
+};
+
+exports.does_user_exist = function(req, res) {
+  User.findOne({"nickname" : req.params.nickname}, function(err, user) {
+    if (err)
+      res.send(err);
+    res.json({"found" : req.params.nickname==user.nickname});
   });
 };

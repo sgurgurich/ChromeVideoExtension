@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
-  id : Number,
+  sessionId : Number,
   isBuffering : Boolean,
   isPlaying: Boolean,
   lastActivity: {
@@ -14,14 +14,12 @@ var SessionSchema = new Schema({
 });
 
 var SessionUsersSchema = new Schema({
-  id : Number,
   sessionId: Number,
   nickname: String,
   isPageLoaded: Boolean
 });
 
 var UserSchema = new Schema({
-  id : Number,
   nickname : String,
   lastConnected : {
     type: Date,
@@ -48,6 +46,6 @@ var TaskSchema = new Schema({
 });
 
 module.exports = mongoose.model('Tasks', TaskSchema);
-module.exports = mongoose.model('Sessions', SessionSchema);
+module.exports = mongoose.model('Session', SessionSchema);
 module.exports = mongoose.model('SessionUsers', SessionUsersSchema);
 module.exports = mongoose.model('User', UserSchema);

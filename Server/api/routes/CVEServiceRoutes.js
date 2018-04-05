@@ -13,5 +13,9 @@ module.exports = function(app) {
     .put(todoList.update_a_task)
     .delete(todoList.delete_a_task);
 
+  app.route('/user/:nickname')
+    .get(todoList.does_user_exist)
+    .post(todoList.add_user);
+    //.put(todoList.update_user);
 };
 
