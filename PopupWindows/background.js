@@ -86,10 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
 					//chrome.runtime.sendMessage({
 					//	msg: "nicknameValid"
 					//});
-					$.post( "http://vps.bellisimospizza.com/tasks/" + myNickname );
-
+					$.post( "http://vps.bellisimospizza.com/user/" + myNickname , function(data){
+								 //do something with the data here
+					});
 				}				
-				});
+			});
         }
       });
 
