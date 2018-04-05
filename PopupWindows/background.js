@@ -67,12 +67,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+	// TODO: For testing only
     chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
-        if (request.msg === "pingDB") {
-          $.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function() {
-            console.log( "success" );
-          });
+        if (request.msg === "verifyNickname") {
+
+			if( $.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function() {
+				console.log( "success" );
+
+			  }))
+			{
+				myCurrentPage = "page1";
+				myNickname = " ";				
+				chrome.runtime.sendMessage({
+					msg: "nicknameError"
+				});
+			}
+			else{
+
+				chrome.runtime.sendMessage({
+					msg: "nicknameValid"
+				});
+			}
         }
       });
 
