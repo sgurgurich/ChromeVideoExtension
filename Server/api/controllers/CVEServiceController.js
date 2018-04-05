@@ -66,6 +66,10 @@ exports.does_user_exist = function(req, res) {
   User.findOne({"nickname" : req.params.nickname}, function(err, user) {
     if (err)
       res.send(err);
-    res.json({"found" : req.params.nickname==user.nickname});
+    var found = true;
+    console.log(user);
+    if (user == null)
+      found = false
+    res.json({"found" : found});
   });
 };
