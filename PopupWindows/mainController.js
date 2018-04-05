@@ -14,12 +14,17 @@ function createNickname() {
   // Prompt me about joining or creating a session
   myNickname = document.getElementById("nameInput").value;
 
+
   if (myNickname.length >= 3) {
     document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
     document.getElementById("page1").style.display = "none";
     document.getElementById("page2").style.display = "block";
     myCurrentPage = "page2";
     sendDataToBackground();
+    // TODO: TEMPORARY
+      chrome.runtime.sendMessage({
+        msg: "pingDB"
+      });
   } else {
     //Display page1 again but with the INVALID NAME error
     document.getElementById("nameError").style.display = "block";

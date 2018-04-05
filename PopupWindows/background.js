@@ -67,6 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+        if (request.msg === "pingDB") {
+          $.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function() {
+            console.log( "success" );
+          });
+        }
+      });
+
+
+
+
   var intervalID = setInterval(checkForUpdates, 2000);
 
 });
