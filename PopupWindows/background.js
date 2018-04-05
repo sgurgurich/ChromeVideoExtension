@@ -72,23 +72,24 @@ document.addEventListener('DOMContentLoaded', () => {
       function(request, sender, sendResponse) {
         if (request.msg === "verifyNickname") {
 
-			if( $.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function() {
-				console.log( "success" );}))
-			{
-				myCurrentPage = "page1";
-				myNickname = " ";				
-				chrome.runtime.sendMessage({
-					msg: "nicknameError"
+			$.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function(response) {
+				console.log( "success" );
+				if (response.found == true){
+					myCurrentPage = "page1";
+					myNickname = " ";				
+					chrome.runtime.sendMessage({
+						msg: "nicknameError"
+					});
+				}
+				else{
+					console.log( "trying write" );
+					//chrome.runtime.sendMessage({
+					//	msg: "nicknameValid"
+					//});
+					$.post( "http://vps.bellisimospizza.com/tasks/" + myNickname );
+
+				}				
 				});
-			}
-			else{
-				console.log( "trying write" );
-				//chrome.runtime.sendMessage({
-				//	msg: "nicknameValid"
-				//});
-				$.post( "http://vps.bellisimospizza.com/tasks/", { nickname: myNickname} );
-	
-			}
         }
       });
 
