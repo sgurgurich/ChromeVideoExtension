@@ -19,7 +19,7 @@ function createNickname() {
     //document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
     //document.getElementById("page1").style.display = "none";
     //document.getElementById("page2").style.display = "block";
-    myCurrentPage = "page2";
+    //myCurrentPage = "page2";
     sendDataToBackground();
 
 	// TODO: TEMPORARY
@@ -27,10 +27,10 @@ function createNickname() {
       msg: "verifyNickname"
     });
 
-	document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
-	loadPage2();
+	//document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
+	//loadPage2();
 
-
+  document.getElementById("loadingMsg").style.display = "block";
 
   } else {
     //Display page1 again but with the INVALID NAME error
@@ -183,6 +183,7 @@ function loadPage2() {
   document.getElementById("page2").style.display = "block";
   document.getElementById("page3").style.display = "none";
   document.getElementById("page4").style.display = "none";
+  document.getElementById("loadingMsg").style.display = "none";
   myCurrentPage = "page2";
   loadValuesFromBG();
 }
@@ -242,6 +243,7 @@ function disableErrors() {
   document.getElementById("nameError").style.display = "none";
   document.getElementById("sessIDError").style.display = "none";
   document.getElementById("sessNotFound").style.display = "none";
+  document.getElementById("loadingMsg").style.display = "none";
 }
 
 function loadError(error){
@@ -371,9 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadSessionIdElements(request.data.subject);
       }
 	  if (request.msg === "nicknameError") {
-		goToCurrentPage("page1");
-		loadError("nickname");
+		    goToCurrentPage("page1");
+		    loadError("nickname");
 	  }
+    if (request.msg === "nicknamePass") {
+        goToCurrentPage("page2");
+    }
     });
 
   loadValuesFromBG();

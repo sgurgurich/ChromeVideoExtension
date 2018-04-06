@@ -5,6 +5,7 @@
 // John Cutsavage
 
 var myNickname;
+var myUserID;
 var myCurrentPage;
 var mySessionID;
 
@@ -41,6 +42,7 @@ function initWebSockets() {
 document.addEventListener('DOMContentLoaded', () => {
 
   myNickname = " ";
+  myUserID   = " ";
   myCurrentPage = "page1";
   mySessionID = " ";
 
@@ -91,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function(request, sender, sendResponse) {
       if (request.msg === "verifyNickname") {
 
-        $.get("http://vps.bellisimospizza.com/tasks/" + myNickname, function(response) {
+        $.get("http://vps.bellisimospizza.com/user/" + myNickname, function(response) {
           console.log( "success" );
           if (response.found == true) {
             myCurrentPage = "page1";
@@ -102,7 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             console.log( "trying write" );
             $.post("http://vps.bellisimospizza.com/user/" + myNickname, function(data) {
-              //do something with the data here
+              myUserID = data._id;
+            });
+            myCurrentPage = "page2";
+            chrome.runtime.sendMessage({
+              msg: "nicknamePass"
             });
           }
         });
