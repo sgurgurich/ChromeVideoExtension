@@ -7,24 +7,37 @@
 var myNickname;
 var mySessionID;
 var myCurrentPage;
-var x;
+
 
 function createNickname() {
   // Get my nickname and ADD it to database
   // Prompt me about joining or creating a session
   myNickname = document.getElementById("nameInput").value;
 
+
   if (myNickname.length >= 3) {
-    document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
-    document.getElementById("page1").style.display = "none";
-    document.getElementById("page2").style.display = "block";
+    //document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
+    //document.getElementById("page1").style.display = "none";
+    //document.getElementById("page2").style.display = "block";
     myCurrentPage = "page2";
     sendDataToBackground();
+	
+	// TODO: TEMPORARY
+	chrome.runtime.sendMessage({
+      msg: "verifyNickname"
+    });
+	
+	document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
+	loadPage2();
+	
+
+	  
   } else {
     //Display page1 again but with the INVALID NAME error
     document.getElementById("nameError").style.display = "block";
   }
 }
+
 
 function joinSession() {
   document.getElementById("page2").style.display = "none";
@@ -93,14 +106,14 @@ function loadParty() {
 
 //TODO: Maybe the server should do this?
 function generateSessionID() {
-  var firstChar = (Math.floor(Math.random() * 10)).toString();
-  var secondChar = (Math.floor(Math.random() * 10)).toString();
-  var thirdChar = (Math.floor(Math.random() * 10)).toString();
-  var fourthChar = (Math.floor(Math.random() * 10)).toString();
-  var fifthChar = (Math.floor(Math.random() * 10)).toString();
-  var sixthChar = (Math.floor(Math.random() * 10)).toString();
-  var seventhChar = (Math.floor(Math.random() * 10)).toString();
-  var eighthChar = (Math.floor(Math.random() * 10)).toString();
+  var firstChar   =  (Math.floor(Math.random() * 10)).toString();
+  var secondChar  =  (Math.floor(Math.random() * 10)).toString();
+  var thirdChar   =  (Math.floor(Math.random() * 10)).toString();
+  var fourthChar  =  (Math.floor(Math.random() * 10)).toString();
+  var fifthChar   =  (Math.floor(Math.random() * 10)).toString();
+  var sixthChar   =  (Math.floor(Math.random() * 10)).toString();
+  var seventhChar =  (Math.floor(Math.random() * 10)).toString();
+  var eighthChar  =  (Math.floor(Math.random() * 10)).toString();
 
   mySessionID = firstChar + secondChar + thirdChar + fourthChar + fifthChar + sixthChar + seventhChar + eighthChar;
 
@@ -231,6 +244,16 @@ function disableErrors() {
   document.getElementById("sessNotFound").style.display = "none";
 }
 
+function loadError(error){
+	switch(error){
+		case "nickname":
+			document.getElementById("nameError").style.display = "block";
+			break;
+		default:
+			break;
+	}
+}
+
 function startButtonActionListeners() {
   // Activate other action listeners
   document.getElementById("submitName").addEventListener("click", createNickname);
@@ -347,6 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg === "update_sessionidFG") {
         loadSessionIdElements(request.data.subject);
       }
+	  if (request.msg === "nicknameError") {
+		goToCurrentPage("page1");
+		loadError("nickname");
+	  }
     });
 
   loadValuesFromBG();

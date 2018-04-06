@@ -67,6 +67,36 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+	// TODO: For testing only
+    chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+        if (request.msg === "verifyNickname") {
+
+			$.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function(response) {
+				console.log( "success" );
+				if (response.found == true){
+					myCurrentPage = "page1";
+					myNickname = " ";				
+					chrome.runtime.sendMessage({
+						msg: "nicknameError"
+					});
+				}
+				else{
+					console.log( "trying write" );
+					//chrome.runtime.sendMessage({
+					//	msg: "nicknameValid"
+					//});
+					$.post( "http://vps.bellisimospizza.com/user/" + myNickname , function(data){
+								 //do something with the data here
+					});
+				}				
+			});
+        }
+      });
+
+
+
+
   var intervalID = setInterval(checkForUpdates, 2000);
 
 });
