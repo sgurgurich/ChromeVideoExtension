@@ -21,17 +21,17 @@ function createNickname() {
     //document.getElementById("page2").style.display = "block";
     myCurrentPage = "page2";
     sendDataToBackground();
-	
+
 	// TODO: TEMPORARY
 	chrome.runtime.sendMessage({
       msg: "verifyNickname"
     });
-	
+
 	document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
 	loadPage2();
-	
 
-	  
+
+
   } else {
     //Display page1 again but with the INVALID NAME error
     document.getElementById("nameError").style.display = "block";

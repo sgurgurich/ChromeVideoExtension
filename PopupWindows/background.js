@@ -8,6 +8,8 @@ var myNickname;
 var myCurrentPage;
 var mySessionID;
 
+var ws;
+
 function checkForUpdates() {
 
   console.log(myNickname);
@@ -18,6 +20,23 @@ function checkForUpdates() {
 function testLog(log) {
   console.log(log);
 }
+
+function initWebSockets() {
+
+  if ("WebSocket" in window) {
+    ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
+    ws.onopen = function() {
+      ws.send("hello trim");
+    };
+  }
+
+  // Listen for messages
+  ws.addEventListener('message', function(event) {
+    console.log('Message from server ', event.data);
+  });
+
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -67,33 +86,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-	// TODO: For testing only
-    chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
-        if (request.msg === "verifyNickname") {
+  // TODO: For testing only
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.msg === "verifyNickname") {
 
-			$.get( "http://vps.bellisimospizza.com/tasks/" + myNickname, function(response) {
-				console.log( "success" );
-				if (response.found == true){
-					myCurrentPage = "page1";
-					myNickname = " ";				
-					chrome.runtime.sendMessage({
-						msg: "nicknameError"
-					});
-				}
-				else{
-					console.log( "trying write" );
-					//chrome.runtime.sendMessage({
-					//	msg: "nicknameValid"
-					//});
-					$.post( "http://vps.bellisimospizza.com/user/" + myNickname , function(data){
-								 //do something with the data here
-					});
-				}				
-			});
-        }
-      });
+        $.get("http://vps.bellisimospizza.com/tasks/" + myNickname, function(response) {
+          console.log( "success" );
+          if (response.found == true) {
+            myCurrentPage = "page1";
+            myNickname = " ";
+            chrome.runtime.sendMessage({
+              msg: "nicknameError"
+            });
+          } else {
+            console.log( "trying write" );
+            $.post("http://vps.bellisimospizza.com/user/" + myNickname, function(data) {
+              //do something with the data here
+            });
+          }
+        });
+      }
+    });
 
+
+  initWebSockets();
 
 
 
