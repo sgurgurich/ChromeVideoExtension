@@ -3,16 +3,18 @@
 // Zach Adam
 // Trim Ballanca
 // John Cutsavage
+///////////////////////////////////////////////////
+// SET THIS BIT TO TRUE FOR LOCAL DEVELOPMENT
+var local_dev = true;
+///////////////////////////////////////////////////
 
 var myNickname;
 var myUserID;
 var myCurrentPage;
 var mySessionID;
-
 var ws;
 
 function checkForUpdates() {
-
   console.log(myNickname);
   console.log(myCurrentPage);
   console.log(mySessionID);
@@ -42,7 +44,7 @@ function initWebSockets() {
 document.addEventListener('DOMContentLoaded', () => {
 
   myNickname = " ";
-  myUserID   = " ";
+  myUserID = " ";
   myCurrentPage = "page1";
   mySessionID = " ";
 
@@ -88,37 +90,45 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-  // TODO: For testing only
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.msg === "verifyNickname") {
+  if (!local_dev) {
+    chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+        if (request.msg === "verifyNickname") {
+          $.get("http://vps.bellisimospizza.com/user/" + myNickname, function(response) {
+            console.log( "success" );
+            if (response.found == true) {
+              myCurrentPage = "page1";
+              myNickname = " ";
+              chrome.runtime.sendMessage({
+                msg: "nicknameError"
+              });
+            } else {
+              console.log( "trying write" );
+              $.post("http://vps.bellisimospizza.com/user/" + myNickname, function(data) {
+                myUserID = data._id;
+              });
+              myCurrentPage = "page2";
+              chrome.runtime.sendMessage({
+                msg: "nicknamePass"
+              });
+            }
+          });
+        }
+      });
 
-        $.get("http://vps.bellisimospizza.com/user/" + myNickname, function(response) {
-          console.log( "success" );
-          if (response.found == true) {
-            myCurrentPage = "page1";
-            myNickname = " ";
-            chrome.runtime.sendMessage({
-              msg: "nicknameError"
-            });
-          } else {
-            console.log( "trying write" );
-            $.post("http://vps.bellisimospizza.com/user/" + myNickname, function(data) {
-              myUserID = data._id;
-            });
-            myCurrentPage = "page2";
-            chrome.runtime.sendMessage({
-              msg: "nicknamePass"
-            });
-          }
-        });
-      }
-    });
+    initWebSockets();
 
-
-  initWebSockets();
-
-
+  } else {
+    chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+        if (request.msg === "verifyNickname") {
+          myCurrentPage = "page2";
+          chrome.runtime.sendMessage({
+            msg: "nicknamePass"
+          });
+        }
+      });
+  }
 
   var intervalID = setInterval(checkForUpdates, 2000);
 

@@ -3,41 +3,28 @@
 // Zach Adam
 // Trim Ballanca
 // John Cutsavage
+///////////////////////////////////////////////////
 
 var myNickname;
 var mySessionID;
 var myCurrentPage;
 
-
+///////////////////////////////////////////////////
+//  USER ACTIONS
+///////////////////////////////////////////////////
 function createNickname() {
-  // Get my nickname and ADD it to database
-  // Prompt me about joining or creating a session
   myNickname = document.getElementById("nameInput").value;
-
-
   if (myNickname.length >= 3) {
-    //document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
-    //document.getElementById("page1").style.display = "none";
-    //document.getElementById("page2").style.display = "block";
-    //myCurrentPage = "page2";
     sendDataToBackground();
-
-	// TODO: TEMPORARY
-	chrome.runtime.sendMessage({
+    chrome.runtime.sendMessage({
       msg: "verifyNickname"
     });
-
-	//document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
-	//loadPage2();
-
-  document.getElementById("loadingMsg").style.display = "block";
-
+    document.getElementById("loadingMsg").style.display = "block";
   } else {
     //Display page1 again but with the INVALID NAME error
     document.getElementById("nameError").style.display = "block";
   }
 }
-
 
 function joinSession() {
   document.getElementById("page2").style.display = "none";
@@ -47,9 +34,6 @@ function joinSession() {
 }
 
 function createSession() {
-  // Request a session ID, add it to database
-  // Add my nickname to session
-  // Bring me to session page
   document.getElementById("page2").style.display = "none";
   document.getElementById("page4").style.display = "block";
   myCurrentPage = "page4";
@@ -82,38 +66,20 @@ function submitSessionID() {
   }
 }
 
-
-// DATABASE/SERVER FUNCTIONS
 function querySessionID() {
   // Check the database to see if the session ID is valid
   return (true);
 }
 
-function loadCurrentSession() {
-  document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
-  loadParty();
-}
-
-function loadParty() {
-  document.getElementById("user1").innerHTML = myNickname;
-
-  // TODO: We will get these from the Database
-  document.getElementById("user2").innerHTML = "";
-  document.getElementById("user3").innerHTML = "";
-  document.getElementById("user4").innerHTML = "";
-  document.getElementById("user5").innerHTML = "";
-}
-
-//TODO: Maybe the server should do this?
 function generateSessionID() {
-  var firstChar   =  (Math.floor(Math.random() * 10)).toString();
-  var secondChar  =  (Math.floor(Math.random() * 10)).toString();
-  var thirdChar   =  (Math.floor(Math.random() * 10)).toString();
-  var fourthChar  =  (Math.floor(Math.random() * 10)).toString();
-  var fifthChar   =  (Math.floor(Math.random() * 10)).toString();
-  var sixthChar   =  (Math.floor(Math.random() * 10)).toString();
-  var seventhChar =  (Math.floor(Math.random() * 10)).toString();
-  var eighthChar  =  (Math.floor(Math.random() * 10)).toString();
+  var firstChar = (Math.floor(Math.random() * 10)).toString();
+  var secondChar = (Math.floor(Math.random() * 10)).toString();
+  var thirdChar = (Math.floor(Math.random() * 10)).toString();
+  var fourthChar = (Math.floor(Math.random() * 10)).toString();
+  var fifthChar = (Math.floor(Math.random() * 10)).toString();
+  var sixthChar = (Math.floor(Math.random() * 10)).toString();
+  var seventhChar = (Math.floor(Math.random() * 10)).toString();
+  var eighthChar = (Math.floor(Math.random() * 10)).toString();
 
   mySessionID = firstChar + secondChar + thirdChar + fourthChar + fifthChar + sixthChar + seventhChar + eighthChar;
 
@@ -170,6 +136,9 @@ function pauseVideo() {
   });
 }
 
+///////////////////////////////////////////////////
+//  PAGE NAVIGATION
+///////////////////////////////////////////////////
 function loadPage1() {
   document.getElementById("page1").style.display = "block";
   document.getElementById("page2").style.display = "none";
@@ -206,90 +175,6 @@ function loadPage4() {
   loadValuesFromBG();
 }
 
-function loadNicknameElements(name) {
-  document.getElementById("usergreeting").innerHTML = "Hey " + name;
-  document.getElementById("user1").innerHTML = name;
-}
-
-
-function loadSessionIdElements(sessId) {
-  document.getElementById("currSession").innerHTML = "Session ID: " + sessId;
-}
-
-function goToCurrentPage(page) {
-  switch (page) {
-    case "page1":
-      loadPage1();
-      break;
-    case "page2":
-      loadPage2();
-      break;
-    case "page3":
-      loadPage3();
-      break;
-    case "page4":
-      loadPage4();
-      break;
-    default:
-      document.getElementById("page1").style.display = "block";
-      document.getElementById("page2").style.display = "none";
-      document.getElementById("page3").style.display = "block";
-      document.getElementById("page4").style.display = "none";
-  }
-  // Set the default page states
-}
-
-function disableErrors() {
-  document.getElementById("nameError").style.display = "none";
-  document.getElementById("sessIDError").style.display = "none";
-  document.getElementById("sessNotFound").style.display = "none";
-  document.getElementById("loadingMsg").style.display = "none";
-}
-
-function loadError(error){
-	switch(error){
-		case "nickname":
-			document.getElementById("nameError").style.display = "block";
-			break;
-		default:
-			break;
-	}
-}
-
-function startButtonActionListeners() {
-  // Activate other action listeners
-  document.getElementById("submitName").addEventListener("click", createNickname);
-  document.getElementById("joinSess").addEventListener("click", joinSession);
-  document.getElementById("createSess").addEventListener("click", createSession);
-  document.getElementById("submitID").addEventListener("click", submitSessionID);
-
-  document.getElementById("back2").addEventListener("click", goBackToP1);
-  document.getElementById("back3").addEventListener("click", goBackToP2);
-  document.getElementById("playBt").addEventListener("click", playVideo);
-  document.getElementById("pauseBt").addEventListener("click", pauseVideo);
-
-  document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
-}
-
-function leaveCurrentSession() {
-
-  chrome.runtime.sendMessage({
-    msg: "update_sessionid",
-    data: {
-      subject: ""
-    }
-  });
-
-  chrome.runtime.sendMessage({
-    msg: "update_page",
-    data: {
-      subject: "page2"
-    }
-  });
-
-  loadValuesFromBG();
-}
-
 function goBackToP1() {
 
   chrome.runtime.sendMessage({
@@ -314,6 +199,108 @@ function goBackToP2() {
   loadValuesFromBG();
 }
 
+function goToCurrentPage(page) {
+  switch (page) {
+    case "page1":
+      loadPage1();
+      disableErrors();
+      disableLoadMsg();
+      break;
+    case "page2":
+      loadPage2();
+      disableErrors();
+      disableLoadMsg();
+      break;
+    case "page3":
+      loadPage3();
+      disableErrors();
+      disableLoadMsg();
+      break;
+    case "page4":
+      loadPage4();
+      disableErrors();
+      disableLoadMsg();
+      break;
+    default:
+      document.getElementById("page1").style.display = "block";
+      document.getElementById("page2").style.display = "none";
+      document.getElementById("page3").style.display = "block";
+      document.getElementById("page4").style.display = "none";
+  }
+  // Set the default page states
+}
+
+function leaveCurrentSession() {
+
+  chrome.runtime.sendMessage({
+    msg: "update_sessionid",
+    data: {
+      subject: ""
+    }
+  });
+
+  chrome.runtime.sendMessage({
+    msg: "update_page",
+    data: {
+      subject: "page2"
+    }
+  });
+
+  loadValuesFromBG();
+}
+
+///////////////////////////////////////////////////
+//  ERROR AND LOG ELEMENTS
+///////////////////////////////////////////////////
+function disableErrors() {
+  document.getElementById("nameError").style.display = "none";
+  document.getElementById("nameNotAvailErr").style.display = "none";
+  document.getElementById("sessIDError").style.display = "none";
+  document.getElementById("sessNotFound").style.display = "none";
+  document.getElementById("loadingMsg").style.display = "none";
+}
+
+function disableLoadMsg(){
+  document.getElementById("loadingMsg").style.display = "none";
+}
+
+function loadError(error) {
+  switch (error) {
+    case "nickname":
+      document.getElementById("nameNotAvailErr").style.display = "block";
+      break;
+    default:
+      break;
+  }
+}
+
+function loadNicknameElements(name) {
+  document.getElementById("usergreeting").innerHTML = "Hey " + name;
+  document.getElementById("user1").innerHTML = name;
+}
+
+function loadSessionIdElements(sessId) {
+  document.getElementById("currSession").innerHTML = "Session ID: " + sessId;
+}
+
+function loadCurrentSession() {
+  document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
+  loadParty();
+}
+
+function loadParty() {
+  document.getElementById("user1").innerHTML = myNickname;
+
+  // TODO: We will get these from the Database
+  document.getElementById("user2").innerHTML = "";
+  document.getElementById("user3").innerHTML = "";
+  document.getElementById("user4").innerHTML = "";
+  document.getElementById("user5").innerHTML = "";
+}
+
+///////////////////////////////////////////////////
+//  BACKGROUND OPERATIONS
+///////////////////////////////////////////////////
 function loadValuesFromBG() {
   chrome.runtime.sendMessage({
     msg: "request_nicknameFG"
@@ -353,14 +340,25 @@ function sendDataToBackground() {
 
 }
 
+///////////////////////////////////////////////////
+//  ACTION LISTENERS
+///////////////////////////////////////////////////
+function startButtonActionListeners() {
+  // Activate other action listeners
+  document.getElementById("submitName").addEventListener("click", createNickname);
+  document.getElementById("joinSess").addEventListener("click", joinSession);
+  document.getElementById("createSess").addEventListener("click", createSession);
+  document.getElementById("submitID").addEventListener("click", submitSessionID);
 
-// Action Listner
-// This is triggered when the page or extension loads for the first time]
-// It is basically a constructor for the webpage
-document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById("back2").addEventListener("click", goBackToP1);
+  document.getElementById("back3").addEventListener("click", goBackToP2);
+  document.getElementById("playBt").addEventListener("click", playVideo);
+  document.getElementById("pauseBt").addEventListener("click", pauseVideo);
 
-  myCurrentPage = "page1";
+  document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
+}
 
+function startMsgListeners(){
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.msg === "update_nicknameFG") {
@@ -372,16 +370,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg === "update_sessionidFG") {
         loadSessionIdElements(request.data.subject);
       }
-	  if (request.msg === "nicknameError") {
-		    goToCurrentPage("page1");
-		    loadError("nickname");
-	  }
-    if (request.msg === "nicknamePass") {
+      if (request.msg === "nicknameError") {
+        goToCurrentPage("page1");
+        loadError("nickname");
+      }
+      if (request.msg === "nicknamePass") {
         goToCurrentPage("page2");
-    }
+      }
     });
+}
 
+document.addEventListener('DOMContentLoaded', () => {
+  myCurrentPage = "page1";
+  startMsgListeners();
   loadValuesFromBG();
   startButtonActionListeners();
   disableErrors();
+  disableLoadMsg();
 });
