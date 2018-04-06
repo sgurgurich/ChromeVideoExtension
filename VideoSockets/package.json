@@ -1,0 +1,17 @@
+{
+  "name": "sockets",
+  "version": "1.0.0",
+  "description": "test socket stuff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Trimmy Trim",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "http": "0.0.0",
+    "ws": "^5.1.1"
+  }
+}
