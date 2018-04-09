@@ -1,0 +1,20 @@
+Things to do:
+
+1) Finish API routes (endpoints)
+
+2) Decide what client sends to server and what server sends to clients
+  - Client needs to send sessionID on connection to server
+  - Server needs to update Play/Pause for each client based on mySessionID
+  - Clients send Play/pause requests to Server
+  - Server checks to see the state of the video, and will send the
+    correct play/pause command back to the clients
+
+
+
+3) Implement #2
+
+4) Figure out "Ready State"
+  - On page 4, have text box and ready start
+    - this sends URL to DB
+  - Check to see if each client is on that stored URL and mark them ready/not Ready
+  - "Load URL" button

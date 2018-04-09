@@ -8,6 +8,7 @@
 var myNickname;
 var mySessionID;
 var myCurrentPage;
+var myVideoURL;
 
 ///////////////////////////////////////////////////
 //  USER ACTIONS
@@ -82,6 +83,12 @@ function generateSessionID() {
   var eighthChar = (Math.floor(Math.random() * 10)).toString();
 
   mySessionID = firstChar + secondChar + thirdChar + fourthChar + fifthChar + sixthChar + seventhChar + eighthChar;
+
+}
+
+function setVideoURL(){
+
+  myVideoURL = document.getElementById("urlName").value;
 
 }
 
@@ -355,6 +362,7 @@ function startButtonActionListeners() {
   document.getElementById("playBt").addEventListener("click", playVideo);
   document.getElementById("pauseBt").addEventListener("click", pauseVideo);
 
+  document.getElementById("setURLBt").addEventListener("click", setVideoURL);
   document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
 }
 
