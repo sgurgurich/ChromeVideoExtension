@@ -15,6 +15,7 @@ var myVideoURL;
 ///////////////////////////////////////////////////
 function createNickname() {
   myNickname = document.getElementById("nameInput").value;
+  document.getElementById("nameStorage").innerHTML = myNickname;
   if (myNickname.length >= 3) {
     sendDataToBackground();
     chrome.runtime.sendMessage({
@@ -86,9 +87,20 @@ function generateSessionID() {
 
 }
 
-function setVideoURL(){
+function setVideoURL() {
 
   myVideoURL = document.getElementById("urlName").value;
+  sendDataToBackground();
+
+}
+
+function gotoVideoURL() {
+
+
+
+}
+
+function copyToClipboard() {
 
 }
 
@@ -267,7 +279,7 @@ function disableErrors() {
   document.getElementById("loadingMsg").style.display = "none";
 }
 
-function disableLoadMsg(){
+function disableLoadMsg() {
   document.getElementById("loadingMsg").style.display = "none";
 }
 
@@ -281,17 +293,17 @@ function loadError(error) {
   }
 }
 
-function loadNicknameElements(name) {
-  document.getElementById("usergreeting").innerHTML = "Hey " + name;
-  document.getElementById("user1").innerHTML = name;
+function loadNicknameElements() {
+  document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
+  document.getElementById("user1").innerHTML = myNickname;
 }
 
-function loadSessionIdElements(sessId) {
-  document.getElementById("currSession").innerHTML = "Session ID: " + sessId;
+function loadSessionIdElements() {
+  document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
 }
 
 function loadCurrentSession() {
-  document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
+  //document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
   loadParty();
 }
 
@@ -303,6 +315,13 @@ function loadParty() {
   document.getElementById("user3").innerHTML = "";
   document.getElementById("user4").innerHTML = "";
   document.getElementById("user5").innerHTML = "";
+}
+
+function loadAllElements(){
+  setLocalVars();
+  loadNicknameElements();
+  loadSessionIdElements();
+  loadParty();
 }
 
 ///////////////////////////////////////////////////
@@ -319,6 +338,10 @@ function loadValuesFromBG() {
 
   chrome.runtime.sendMessage({
     msg: "request_sessionidFG"
+  });
+
+  chrome.runtime.sendMessage({
+    msg: "request_URLFG"
   });
 }
 
@@ -345,8 +368,21 @@ function sendDataToBackground() {
     }
   });
 
+  chrome.runtime.sendMessage({
+    msg: "update_URL",
+    data: {
+      subject: myVideoURL
+    }
+  });
+
 }
 
+function setLocalVars(){
+  myNickname = document.getElementById("nameStorage").innerHTML;
+  mySessionID = document.getElementById("sessionStorage").innerHTML;
+  myCurrentPage = document.getElementById("pageStorage").innerHTML;
+  myVideoURL = document.getElementById("urlStorage").innerHTML;
+}
 ///////////////////////////////////////////////////
 //  ACTION LISTENERS
 ///////////////////////////////////////////////////
@@ -362,21 +398,30 @@ function startButtonActionListeners() {
   document.getElementById("playBt").addEventListener("click", playVideo);
   document.getElementById("pauseBt").addEventListener("click", pauseVideo);
 
+  document.getElementById("cpToClip").addEventListener("click", copyToClipboard);
   document.getElementById("setURLBt").addEventListener("click", setVideoURL);
+  document.getElementById("gotoURLBt").addEventListener("click", gotoVideoURL);
   document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
 }
 
-function startMsgListeners(){
+function startMsgListeners() {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.msg === "update_nicknameFG") {
-        loadNicknameElements(request.data.subject);
+        document.getElementById("nameStorage").innerHTML = request.data.subject;
+        //loadNicknameElements(request.data.subject);
       }
       if (request.msg === "update_pageFG") {
+        document.getElementById("pageStorage").innerHTML = request.data.subject;
         goToCurrentPage(request.data.subject);
       }
       if (request.msg === "update_sessionidFG") {
-        loadSessionIdElements(request.data.subject);
+        document.getElementById("sessionStorage").innerHTML = request.data.subject;
+        //loadSessionIdElements(request.data.subject);
+      }
+      if (request.msg === "update_URLFG") {
+        // TODO: Update URL Text
+        document.getElementById("urlStorage").innerHTML = request.data.subject;
       }
       if (request.msg === "nicknameError") {
         goToCurrentPage("page1");
@@ -390,9 +435,12 @@ function startMsgListeners(){
 
 document.addEventListener('DOMContentLoaded', () => {
   myCurrentPage = "page1";
+  mySessionID = "TEST";
+  document.getElementById("storage").style.display = "block";
   startMsgListeners();
   loadValuesFromBG();
   startButtonActionListeners();
   disableErrors();
   disableLoadMsg();
+  var intervalID = setInterval(loadAllElements, 10);
 });

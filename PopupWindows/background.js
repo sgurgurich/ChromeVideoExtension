@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   myUserID = " ";
   myCurrentPage = "page1";
   mySessionID = " ";
+  myVideoURL = " ";
 
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -74,6 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+      if (request.msg == "request_URLFG") {
+        chrome.runtime.sendMessage({
+          msg: "update_URLFG",
+          data: {
+            subject: myVideoURL
+          }
+        });
+      }
 
     });
 
@@ -87,6 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (request.msg === "update_sessionid") {
         mySessionID = request.data.subject;
+      }
+      if (request.msg === "update_URL") {
+        myVideoURL = request.data.subject;
       }
     });
 
@@ -130,6 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  var intervalID = setInterval(checkForUpdates, 2000);
+  //var intervalID = setInterval(checkForUpdates, 2000);
 
 });

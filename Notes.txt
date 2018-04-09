@@ -9,8 +9,6 @@ Things to do:
   - Server checks to see the state of the video, and will send the
     correct play/pause command back to the clients
 
-
-
 3) Implement #2
 
 4) Figure out "Ready State"

@@ -58,11 +58,15 @@
 
   <div id="page4">
     <h1>Your Current Session</h1>
-    <label id="currSession"></label><br>
+    <p class="big">
+      <label id="currSession"></label>
+      <button type="button" id="cpToClip">Copy</button>
+    </p>
     <p class="big">
       <label>Video URL:</label>
       <input type="text" name="fname" id="urlName">
       <button type="button" id="setURLBt">Set URL</button>
+      <button type="button" id="gotoURLBt">Go To URL</button>
     </p>
     <hr>
     <p><button type="button" id="playBt">> Play</button>
@@ -82,6 +86,15 @@
     <p><button type="button" id="leaveBt">Leave Party</button></p>
     </label>
   </div>
+
+  <div id="storage">
+    <div id="nameStorage"></div>
+    <div id="sessionStorage"></div>
+    <div id="pageStorage"></div>
+    <div id="urlStorage"></div>
+  </div>
+
+
 </body>
 
 </html>
