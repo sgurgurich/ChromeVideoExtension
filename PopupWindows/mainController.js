@@ -39,8 +39,13 @@ function createSession() {
   document.getElementById("page2").style.display = "none";
   document.getElementById("page4").style.display = "block";
   myCurrentPage = "page4";
-  generateSessionID();
-  loadCurrentSession();
+
+  chrome.runtime.sendMessage({
+    msg: "generate_session"
+  });
+
+//  generateSessionID();  // TEMPORARY
+  loadParty();
   sendDataToBackground();
 }
 
@@ -300,11 +305,6 @@ function loadNicknameElements() {
 
 function loadSessionIdElements() {
   document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
-}
-
-function loadCurrentSession() {
-  //document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
-  loadParty();
 }
 
 function loadParty() {

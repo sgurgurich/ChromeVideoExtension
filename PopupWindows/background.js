@@ -24,12 +24,39 @@ function testLog(log) {
   console.log(log);
 }
 
+function openSessionConnection() {
+  if ("WebSocket" in window) {
+    ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
+    ws.onopen = function() {
+      ws.send({
+        "sessionID": mySessionID
+      });
+    };
+  }
+  // Listen for messages
+  ws.addEventListener('message', function(event) {
+    console.log('Message from server ', event.data);
+  });
+}
+
+function sendPlayRequest() {
+  ws.send({
+    "PlayRequest": true
+  });
+}
+
+function sendPauseRequest() {
+  ws.send({
+    "PauseRequest": true
+  });
+}
+
 function initWebSockets() {
 
   if ("WebSocket" in window) {
     ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
     ws.onopen = function() {
-      ws.send("hello trim");
+      ws.send("Hello Trim");
     };
   }
 
@@ -83,6 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+      if (request.msg == "generate_session") {
+        // Query Database for session ID
+
+        // send session id to Server
+        openSessionConnection();
+        // Get back users and session info
+        mySessionID = "12345678"
+        // Send session info and session id to main
+
+      }
 
     });
 
@@ -94,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg === "update_page") {
         myCurrentPage = request.data.subject;
       }
-      if (request.msg === "update_sessionid") {
+      if (request.msg === "update_sessionid" && mySessionID == " ") {
         mySessionID = request.data.subject;
       }
       if (request.msg === "update_URL") {
@@ -128,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-    initWebSockets();
+    //initWebSockets();
 
   } else {
     chrome.runtime.onMessage.addListener(
