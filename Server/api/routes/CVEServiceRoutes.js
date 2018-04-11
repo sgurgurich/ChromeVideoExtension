@@ -1,21 +1,24 @@
 'use strict';
 module.exports = function(app) {
 
-  var todoList = require('../controllers/CVEServiceController');
+  var controller = require('../controllers/CVEServiceController');
 
-  //todoList Routes
+  //controller Routes
   app.route('/tasks')
-    .get(todoList.list_all_tasks)
-    .post(todoList.create_a_task);
+    .get(controller.list_all_tasks)
+    .post(controller.create_a_task);
 
   app.route('/tasks/:taskId')
-    .get(todoList.read_a_task)
-    .put(todoList.update_a_task)
-    .delete(todoList.delete_a_task);
+    .get(controller.read_a_task)
+    .put(controller.update_a_task)
+    .delete(controller.delete_a_task);
 
   app.route('/user/:nickname')
-    .get(todoList.does_user_exist)
-    .post(todoList.add_user);
-    //.put(todoList.update_user);
+    .get(controller.does_user_exist)
+    .post(controller.add_user);
+    //.put(controller.update_user);
+    
+  app.route('/session')
+    .get(controller.generate_session);
 };
 

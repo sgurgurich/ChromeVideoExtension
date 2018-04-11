@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Session = mongoose.model('Session'),
   SessionUsers = mongoose.model('SessionUsers');
+  
 exports.list_all_tasks = function(req, res) {
   Task.find({}, function(err, task) {
     if (err)
@@ -69,7 +70,26 @@ exports.does_user_exist = function(req, res) {
     var found = true;
     console.log(user);
     if (user == null)
-      found = false
+      found = false;
     res.json({"found" : found});
   });
 };
+
+exports.generate_session = function(req, res) {
+  var firstChar = (Math.floor(Math.random() * 10)).toString();
+  var secondChar = (Math.floor(Math.random() * 10)).toString();
+  var thirdChar = (Math.floor(Math.random() * 10)).toString();
+  var fourthChar = (Math.floor(Math.random() * 10)).toString();
+  var fifthChar = (Math.floor(Math.random() * 10)).toString();
+  var sixthChar = (Math.floor(Math.random() * 10)).toString();
+  var seventhChar = (Math.floor(Math.random() * 10)).toString();
+  var eighthChar = (Math.floor(Math.random() * 10)).toString();
+   
+  var session_id = firstChar + secondChar + thirdChar + fourthChar + fifthChar + sixthChar + seventhChar + eighthChar;
+    
+ 
+  var my_session = new Session({sessionId: session_id});
+  my_session.save(function(err) {
+    res.json({"sessionId": session_id});
+  });
+}
