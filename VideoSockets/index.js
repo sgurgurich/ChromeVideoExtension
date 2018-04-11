@@ -12,7 +12,7 @@ const wss = new WebSocket.Server({ server });
 
 //variables
 var successful = {"success" : true};
-var MessageTypeEnum = Object.freeze({"play":1, "pause":2, "leave":3, "join":4, "":5});
+var MessageTypeEnum = Object.freeze({"play":1, "pause":2, "leave":3, "join":4, "update":5});
 
 //key: sessionID
 //value: array of users currently connected
@@ -46,6 +46,10 @@ ws.on('message', (message) => {
             //call join session
             message.userid;
             message.sessionid;
+            break;
+        case MessageTypeEnum.update:
+            //broadcast that there has been an update to session
+            //this should initiation requerying database on GUI
             break;
         default:
             //we shouldn't have gotten here
