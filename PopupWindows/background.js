@@ -111,16 +111,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
       if (request.msg == "generate_session") {
-        // Query Database for session ID
 
+        // Query Database for session ID
+        $.get("http://vps.bellisimospizza.com/session/" + myNickname, function(response) {
+          console.log( "success" );
+          mySessionID = response.sessiomId;
+        });
         // send session id to Server
         openSessionConnection();
+
         // Get back users and session info
-        mySessionID = "12345678"
+        ws.send("Give me session info");
+
         // Send session info and session id to main
-
+        chrome.runtime.sendMessage({
+          msg: "update_sessionIDFG",
+          data: {
+            subject: mySessionID
+          }
+        });
       }
-
     });
 
   chrome.runtime.onMessage.addListener(
