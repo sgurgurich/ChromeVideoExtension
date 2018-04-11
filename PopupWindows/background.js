@@ -113,15 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg == "generate_session") {
 
         // Query Database for session ID
-        $.get("http://vps.bellisimospizza.com/session/" + myNickname, function(response) {
+        $.get("http://vps.bellisimospizza.com/session/", function(response) {
           console.log( "success" );
-          mySessionID = response.sessiomId;
+          mySessionID = response.sessionId;
         });
         // send session id to Server
-        openSessionConnection();
+        //openSessionConnection();
 
         // Get back users and session info
-        ws.send("Give me session info");
+        //ws.send("Give me session info");
 
         // Send session info and session id to main
         chrome.runtime.sendMessage({
