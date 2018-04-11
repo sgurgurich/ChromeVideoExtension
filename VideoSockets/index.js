@@ -10,15 +10,21 @@ const server = http.createServer(app);
 //initialize the WebSocket server instance
 const wss = new WebSocket.Server({ server });
 
-const successful = {"success" : true};
-var MessageTypeEnum = Object.freeze({"play":1, "pause":2, "leave":3, "join":4, "":5})
+//variables
+var successful = {"success" : true};
+var MessageTypeEnum = Object.freeze({"play":1, "pause":2, "leave":3, "join":4, "update":5});
+
+//key: sessionID
+//value: array of users currently connected
+var sessions = {};
+
+
 
 //we expect a message with connection open
 //incoming message contains sessionID
 wss.on('connection', (ws) => {
-    //connection is up, let's add a simple simple event
+    //connection is up
     ws.on('message', (message) => {
-
         //log the received sessionID and send a "success" message to the client
         console.log('received: %s', message);
         ws.send(successful);
@@ -31,26 +37,43 @@ ws.on('message', (message) => {
     switch (message.type) {
         case MessageTypeEnum.play:
         case MessageTypeEnum.pause:
-            //call broaast pause
+            //call broadcast pause
             break;
         case MessageTypeEnum.leave:
             //call leave session
             break;
         case MessageTypeEnum.join:
             //call join session
+            message.userid;
+            message.sessionid;
+            break;
+        case MessageTypeEnum.update:
+            //broadcast that there has been an update to session
+            //this should initiation requerying database on GUI
             break;
         default:
             //we shouldn't have gotten here
             ws.send("Can't read message type");
     }
-    console.log('received: %s', message);
-    ws.send(`Hello, you sent -> ${message}`);
 });
 
 function broadcast(sessionID, mode) {
-  console.log(myNickname);
-  console.log(myCurrentPage);
-  console.log(mySessionID);
+}
+
+function join(userid, sessionid) 
+{
+    if(sessions[sessionid] != null)
+    {
+        sessions[sessionid] = sessions[sessionid].push(userid);
+    }
+    else
+    {
+        sessions[sessionid] = [userid];
+    }
+    return true;
+}
+
+function leave(sessionID, mode) {
 }
 
 //start our server
