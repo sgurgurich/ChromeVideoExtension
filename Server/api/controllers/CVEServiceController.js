@@ -219,6 +219,7 @@ exports.get_session_url = function(req, res){
 }
 
 exports.set_session_url = function(req, res){
+  console.log("Request received");
   Session.findOneAndUpdate({sessionId:req.params.sessionid},
   {$set: {videoUrl: req.body.url}},
   {new: true},
