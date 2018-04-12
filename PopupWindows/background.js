@@ -181,6 +181,16 @@ function addMeToSession(){
   });
 }
 
+function checkIfSessionExists(){
+  $.get("http://vps.bellisimospizza.com/session/" + mySessionID,  function(data) {
+    if (data.found){
+      addMeToSession();
+    }else{
+      //TODO: SEND ERROR TO FRONT END
+    }
+  });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
