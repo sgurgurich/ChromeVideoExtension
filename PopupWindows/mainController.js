@@ -58,35 +58,26 @@ function submitSessionID() {
 
   if (mySessionID.length == 8) {
     // TODO: Add if-statement to check database for this IDs
-    if (querySessionID()) {
-      document.getElementById("page3").style.display = "none";
-      document.getElementById("page4").style.display = "block";
-      myCurrentPage = "page4"
 
-      sendDataToBackground();
+    document.getElementById("page3").style.display = "none";
+    document.getElementById("page4").style.display = "block";
+    myCurrentPage = "page4"
 
-      chrome.runtime.sendMessage({
-        msg: "joinSession",
-      });
+    sendDataToBackground();
 
-      loadParty();
+    chrome.runtime.sendMessage({
+      msg: "joinSession",
+    });
 
-    } else {
-      document.getElementById("sessIDError").style.display = "none";
-      document.getElementById("sessNotFound").style.display = "block";
-    }
+    loadParty();
+
   } else {
-    //Display page3 again but with the INVALID ID error
     document.getElementById("sessIDError").style.display = "block";
+    document.getElementById("sessNotFound").style.display = "none";
   }
+
 }
 
-function querySessionID() {
-  // Check the database to see if the session ID is valid
-
-  //TODO: QUEREY SESSION ID
-  return (true);
-}
 
 function setVideoURL() {
 
@@ -302,6 +293,7 @@ function leaveCurrentSession() {
 function disableErrors() {
   document.getElementById("nameError").style.display = "none";
   document.getElementById("nameNotAvailErr").style.display = "none";
+  document.getElementById("sessNotFound").style.display = "none";
   document.getElementById("sessIDError").style.display = "none";
   document.getElementById("sessNotFound").style.display = "none";
   document.getElementById("loadingMsg").style.display = "none";
@@ -315,6 +307,9 @@ function loadError(error) {
   switch (error) {
     case "nickname":
       document.getElementById("nameNotAvailErr").style.display = "block";
+      break;
+    case "session":
+      document.getElementById("sessNotFound").style.display = "block";
       break;
     default:
       break;
@@ -447,6 +442,10 @@ function startMsgListeners() {
       }
       if (request.msg === "nicknamePass") {
         goToCurrentPage("page2");
+      }
+      if (request.msg === "sessionError") {
+        goToCurrentPage("page3");
+        loadError("session");
       }
       if (request.msg === "play_the_video") {
         playVideo();
