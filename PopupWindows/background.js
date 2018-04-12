@@ -47,10 +47,28 @@ function openSessionConnection() {
       case "updateAlert":
         updateAllInfo();
         break;
+      case "play":
+
+      case "pause":
       default:
         break;
     }
   });
+}
+
+function sendPlayOrPause(player){
+  if (player == "play"){
+    chrome.runtime.sendMessage({
+      msg: "play_the_video",
+    });
+  }
+  if (player == "pause")
+  {
+    chrome.runtime.sendMessage({
+      msg: "pause_the_video",
+    });
+  }
+
 }
 
 function updateAllInfo() {
@@ -283,8 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg === "joinSession") {
         addMeToSession();
       }
-      if (request.msg === "logME") {
-        testLog("AHHHHHHHH");
+      if (request.msg === "playVid") {
+        sendPlayRequest();
+      }
+      if (request.msg === "pauseVid") {
+        sendPauseRequest();
       }
     });
 

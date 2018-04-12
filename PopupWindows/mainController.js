@@ -118,6 +118,22 @@ function copyToClipboard() {
 
 }
 
+function playRequest(){
+  chrome.runtime.sendMessage({
+    msg: "playVid",
+  });
+}
+
+function pauseRequest(){
+  function playRequest(){
+    chrome.runtime.sendMessage({
+      msg: "pauseVid",
+    });
+  }
+}
+
+
+
 function playVideo() {
 
   var tab;
@@ -406,8 +422,8 @@ function startButtonActionListeners() {
 
   document.getElementById("back2").addEventListener("click", goBackToP1);
   document.getElementById("back3").addEventListener("click", goBackToP2);
-  document.getElementById("playBt").addEventListener("click", playVideo);
-  document.getElementById("pauseBt").addEventListener("click", pauseVideo);
+  document.getElementById("playBt").addEventListener("click", playRequest);
+  document.getElementById("pauseBt").addEventListener("click", pauseRequest);
 
   document.getElementById("cpToClip").addEventListener("click", copyToClipboard);
   document.getElementById("setURLBt").addEventListener("click", setVideoURL);
@@ -449,6 +465,13 @@ function startMsgListeners() {
       if (request.msg === "nicknamePass") {
         goToCurrentPage("page2");
       }
+      if (request.msg === "play_the_video") {
+        playVideo();
+      }
+      if (request.msg === "pause_the_video") {
+        pauseVideo();
+      }
+
     });
 }
 
