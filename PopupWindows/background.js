@@ -34,7 +34,8 @@ function openSessionConnection() {
     ws.onopen = function() {
       ws.send({
         "sessionID": mySessionID,
-        "userID": myNickname
+        "userID": myNickname,
+        "type": "newconnection"
       });
     };
   }
