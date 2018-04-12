@@ -125,11 +125,9 @@ function playRequest(){
 }
 
 function pauseRequest(){
-  function playRequest(){
     chrome.runtime.sendMessage({
       msg: "pauseVid",
     });
-  }
 }
 
 
