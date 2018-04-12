@@ -14,23 +14,20 @@ const wss = new WebSocket.Server({ server });
 
 //variables
 var successful = {"success" : true};
-var MessageTypeEnum = Object.freeze({"play":1, "pause":2, "leave":3, "join":4, "update":5, "newconnection":6});
 var CLIENTS = {};
 var SESSIONS = {};
 
 wss.on('connection', (ws) => {
         ws.on('message', (theMessage) => {
-            console.log("\nmessage\n"+theMessage);
-            console.log("\n\n");
             message = JSON.parse(theMessage);
-            console.log(message);
-            console.log(message.type);
+            console.log(theMessage+"\n");
             switch (message.type){
                 case "newconnection":
                     createNewConnection(ws,message.sessionID,message.userID);
                     broadcastUpdateGUI(message.sessionID);
                     break;
-                case "update":
+                case "leave":
+                    closeConnection(message.sessionID, message.userID);
                     break;
                 case "play":
                     broadcastVideoStatus("play", message.sessionID);
@@ -66,6 +63,16 @@ function broadcastVideoStatus(pauseOrPlay, sessionID) {
     var clients = SESSIONS[sessionID];
     for (var i=0; i<clients.length; i++) {
         clients[i].send(pauseOrPlay);
+    }
+}
+function closeConnection(sessionID, userID) {
+    var ws = CLIENTS[userID];
+    var clients = SESSIONS[sessionID];
+    if(clients != null) {
+        clients.pop(ws);
+    }
+    if(ws != null){
+        ws.close();
     }
 }
 
