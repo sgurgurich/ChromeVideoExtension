@@ -32,17 +32,18 @@ function openSessionConnection() {
   if ("WebSocket" in window) {
     ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
     ws.onopen = function() {
-      ws.send({
+      ws.send(JSON.stringify({
         "sessionID": mySessionID,
         "userID": myNickname,
         "type": "newconnection"
-      });
+      }));
     };
   }
   // Listen for messages
   ws.addEventListener('message', function(event) {
-    console.log('Message from server ', event.data);
-    switch (event.type) {
+    console.log('Message from server ', event);
+    var temp = JSON.parse(event.data);
+    switch (temp.type) {
       case "sessionInfo":
         // get session data
         break;
