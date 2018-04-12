@@ -84,8 +84,6 @@ function formatUserArr(temp) {
   }
 
   output = output + "</ul>";
-  console.log(output);
-  console.log(temp);
   return output;
 }
 
@@ -212,31 +210,24 @@ function goToURL() {
 
 function addMeToSession() {
 
-  openSessionConnection();
+
 
   $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
     nickname: myNickname
   }, function(data) {
     if (data.found) {
+      openSessionConnection();
       for (var i = 0; i < 5; i++) {
         myUserList[i] = data.userList[i];
       }
     } else {
-      // TODO: send Error message to front end
+      myCurrentPage = "page3";
+      chrome.runtime.sendMessage({
+        msg: "sessionError"
+      });
     }
   });
 }
-
-function checkIfSessionExists() {
-  $.get("http://vps.bellisimospizza.com/session/" + mySessionID, function(data) {
-    if (data.found) {
-      addMeToSession();
-    } else {
-      //TODO: SEND ERROR TO FRONT END
-    }
-  });
-}
-
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -346,6 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  var intervalID = setInterval(checkForUpdates, 2000);
+  //var intervalID = setInterval(checkForUpdates, 2000);
 
 });

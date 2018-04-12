@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
-  sessionId : Number,
+  sessionId : String,
   isBuffering : Boolean,
   isPlaying: Boolean,
   videoUrl: String,

@@ -125,49 +125,120 @@ exports.generate_session = function(req, res) {
 }
 
 exports.get_session = function(req, res) {
-  Session.findOne({sessionId: req.params.sessionid},
+  Session.findOne({
+      sessionId: req.params.sessionid
+    },
     function(err, session) {
-      if(err) console.log(err);
+      if (err) console.log(err);
       var found = false;
-      if(session){
+      if (session) {
         found = true;
-	console.log(session);
-        res.json({"found":found, 
-	"userList": session.userList,
-	"videoUrl": session.videoUrl});
-      }
-      else{
-        res.json({"found":found, 
-	"userList": "Session not found.",
-	"videoUrl": "Session not found."});
+        console.log(session);
+        res.json({
+          "found": found,
+          "userList": session.userList,
+          "videoUrl": session.videoUrl
+        });
+      } else {
+        res.json({
+          "found": found
+        });
       }
     });
 }
 
-exports.add_user_to_session = function(req, res){
-  Session.findOneAndUpdate({sessionId: req.params.sessionid},
-    {$push: {userList:req.body.nickname}},
-    {new: true},
-    function(err, session){
-      if(err) console.log(err);
-      var found = false;
-      if(session){
-        found = true;
-	console.log(session);
-        res.json({"found":found, 
-	"userList": session.userList,
-	"videoUrl": session.videoUrl});
+exports.add_user_to_session = function(req, res) {
+  Session.findOneAndUpdate({
+      sessionId: req.params.sessionid
+    }, {
+      $push: {
+        userList: req.body.nickname
       }
-      else{
-        res.json({"found":found, 
-	"userList": "Session not found.",
-	"videoUrl": "Session not found."});
+    }, {
+      new: true
+    },
+    function(err, session) {
+      if (err) console.log(err);
+      var found = false;
+      if (session) {
+        found = true;
+        console.log(session);
+        res.json({
+          "found": found,
+          "userList": session.userList,
+          "videoUrl": session.videoUrl
+        });
+      } else {
+        res.json({
+          "found": found,
+        });
       }
     });
+}
+
+exports.remove_user_from_session = function(req, res) {
+  Session.findOneAndUpdate({
+      sessionId: req.params.sessionid
+    }, {
+      $pull: {
+        userList: req.body.nickname
+      }
+    }, {
+      new: true
+    },
+    function(err, session) {
+      if (err) console.log(err);
+      var found = false;
+      if (session) {
+        found = true;
+        console.log(session);
+        res.json({
+          "found": found,
+          "userList": session.userList,
+          "videoUrl": session.videoUrl
+        });
+      } else {
+        res.json({
+          "found": found
+        });
+      }
+  });
+}
+
+exports.get_session_url = function(req, res){
+  Session.findOne({sessionId:req.params.sessionid},
+  function(err, session){
+    if(err) console.log(err);
+    if(session){
+      res.json({"videoUrl": session.videoUrl});
+    }
+    else{
+      res.json({"videoUrl": null});
+    }
+  });
+}
+
+exports.set_session_url = function(req, res){
+  console.log("Request received");
+  Session.findOneAndUpdate({sessionId:req.params.sessionid},
+  {$set: {videoUrl: req.body.url}},
+  {new: true},
+function(err,session){
+  if(err) console.log(err);
+  if(session){
+    console.log(session);
+    res.json({"success": true});
+  }
+  else{
+    res.json({"success": false});
+  }
+});
 }
 
 exports.toDo = function(req, res) {
-  res.json({data: "Functionality not available yet."});
+  res.json({
+    data: "Functionality not available yet."
+  });
 }
 
 function generate_random_id() {
