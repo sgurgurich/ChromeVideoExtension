@@ -164,7 +164,10 @@ function generateSession() {
           myUserList[i] = data.userList[i];
         }
       } else {
-        // TODO: send Error message to front end
+        myCurrentPage = "page3";
+        chrome.runtime.sendMessage({
+          msg: "sessionError"
+        });
       }
     });
   });
@@ -191,7 +194,11 @@ function getAllFromDB() {
 
 function updateURL() {
 
-  // TODO: POST Url stuff
+  $.post("http://vps.bellisimospizza.com/url/" + mySessionID, {
+    url: myVideoURL
+  });
+
+  console.log(mySessionID);
 
   ws.send(JSON.stringify({
     type: "update",
@@ -209,9 +216,6 @@ function goToURL() {
 }
 
 function addMeToSession() {
-
-
-
   $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
     nickname: myNickname
   }, function(data) {

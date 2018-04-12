@@ -306,6 +306,7 @@ function disableErrors() {
 
 function disableLoadMsg() {
   document.getElementById("loadingMsg").style.display = "none";
+  document.getElementById("urlFound").style.display = "none";
 }
 
 function loadError(error) {
@@ -331,6 +332,9 @@ function loadSessionIdElements() {
 
 function loadParty() {
   document.getElementById("userparty").innerHTML = myUserString;
+  //if (myVideoURL != null){
+  //  document.getElementById("urlFound").style.display = "block";
+  //}
 }
 
 function loadAllElements() {
