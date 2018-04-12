@@ -78,19 +78,22 @@ function updateAllInfo() {
 
 function sendPlayRequest() {
   ws.send(JSON.stringify({
-    "play": true
+    "type": "play",
+    "sessionID": mySessionID
   }));
 }
 
 function sendPauseRequest() {
   ws.send(JSON.stringify({
-    "pause": true
+    "type": "pause",
+    "sessionID": mySessionID
   }));
 }
 
 function sendUpdateRequest() {
   ws.send(JSON.stringify({
-    "update": true
+    "type": "update",
+    "sessionID": mySessionID
   }));
 }
 
