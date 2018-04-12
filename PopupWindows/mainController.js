@@ -9,7 +9,7 @@ var myNickname;
 var mySessionID;
 var myCurrentPage;
 var myVideoURL;
-var myUserList;
+var myUserString;
 
 ///////////////////////////////////////////////////
 //  USER ACTIONS
@@ -330,7 +330,7 @@ function loadSessionIdElements() {
 }
 
 function loadParty() {
-  document.getElementById("userparty").innerHTML = myUserList;
+  document.getElementById("userparty").innerHTML = myUserString;
 }
 
 function loadAllElements() {
@@ -395,7 +395,7 @@ function setLocalVars() {
   mySessionID = document.getElementById("sessionStorage").innerHTML;
   myCurrentPage = document.getElementById("pageStorage").innerHTML;
   myVideoURL = document.getElementById("urlStorage").innerHTML;
-  myUserList = document.getElementById("userListStorage").innerHTML;
+  myUserString = document.getElementById("userListStorage").innerHTML;
 }
 ///////////////////////////////////////////////////
 //  ACTION LISTENERS
@@ -418,19 +418,6 @@ function startButtonActionListeners() {
   document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
 }
 
-function formatUserArr(temp) {
-  var output = temp;
-
-  output = output + "<ul>";
-
-  for (var i; i < temp.length; i++) {
-    output = output + "<li>" + temp[i] + "</li>";
-  }
-
-  output = output + "</ul>";
-  return output;
-
-}
 
 function startMsgListeners() {
   chrome.runtime.onMessage.addListener(
@@ -452,8 +439,7 @@ function startMsgListeners() {
         populateVideoUrl();
       }
       if (request.msg === "update_userlistFG") {
-        var tempArr = JSON.parse(request.data);
-        document.getElementById("userListStorage").innerHTML = formatUserArr(tempArr.subject);
+        document.getElementById("userListStorage").innerHTML = request.data.subject;
       }
       if (request.msg === "nicknameError") {
         goToCurrentPage("page1");
@@ -475,7 +461,7 @@ function startMsgListeners() {
 document.addEventListener('DOMContentLoaded', () => {
   myCurrentPage = "page1";
   mySessionID = "TEST";
-  document.getElementById("storage").style.display = "block";
+  document.getElementById("storage").style.display = "none";
   startMsgListeners();
   loadValuesFromBG();
   startButtonActionListeners();

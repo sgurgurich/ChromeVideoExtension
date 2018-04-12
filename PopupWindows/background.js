@@ -12,7 +12,8 @@ var myNickname;
 var myUserID;
 var myCurrentPage;
 var mySessionID;
-var myUserList = ["", "", "", "", ""];
+var myUserList = [];
+var myUserString;
 var myVideoURL;
 
 var ws;
@@ -22,7 +23,7 @@ function checkForUpdates() {
   //  console.log(myCurrentPage);
   //  console.log(mySessionID);
   //  console.log(myVideoURL);
-  
+
 }
 
 function testLog(log) {
@@ -59,19 +60,33 @@ function openSessionConnection() {
   });
 }
 
-function sendPlayOrPause(player){
-  if (player == "play"){
+function sendPlayOrPause(player) {
+  if (player == "play") {
     chrome.runtime.sendMessage({
       msg: "play_the_video",
     });
   }
-  if (player == "pause")
-  {
+  if (player == "pause") {
     chrome.runtime.sendMessage({
       msg: "pause_the_video",
     });
   }
 
+}
+
+function formatUserArr(temp) {
+  var output = "";
+
+  output = output + "<ul>";
+
+  for (var i = 0; i < temp.length; i++) {
+    output = output + "<li>" + temp[i] + "</li>";
+  }
+
+  output = output + "</ul>";
+  console.log(output);
+  console.log(temp);
+  return output;
 }
 
 function updateAllInfo() {
@@ -85,15 +100,13 @@ function updateAllInfo() {
     }
   });
 
-  var tempList = {
-    subject: myUserList
-  }
-  console.log(tempList);
-  console.log(JSON.stringify(tempList));
+  myUserString = formatUserArr(myUserList);
 
   chrome.runtime.sendMessage({
     msg: "update_userlistFG",
-    data: JSON.stringify(tempList)
+    data: {
+      subject: myUserString
+    }
   });
 }
 
@@ -269,12 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (request.msg == "request_userlistFG") {
-        var tempList = {
-          subject: myUserList
-        }
+
+
+        myUserString = formatUserArr(myUserList);
         chrome.runtime.sendMessage({
           msg: "update_userlistFG",
-          data: JSON.stringify(tempList)
+          data: {
+            subject: myUserString
+          }
         });
       }
       if (request.msg == "generate_session") {
