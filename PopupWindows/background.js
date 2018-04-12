@@ -116,19 +116,21 @@ function generateSession() {
   $.get("http://vps.bellisimospizza.com/session/", function(response) {
     console.log( "success" );
     mySessionID = response.sessionId;
+    $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
+      nickname: myNickname
+    }, function(data) {
+      if (data.found) {
+        for (var i = 0; i < 5; i++) {
+          myUserList[i] = data.userList[i];
+        }
+        console.log("SUCK A DICK BOIS");
+      } else {
+        // TODO: send Error message to front end
+      }
+    });
   });
 
-  $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
-    nickname: myNickname
-  }, function(data) {
-    if (data.found) {
-      for (var i = 0; i < 5; i++) {
-        myUserList[i] = data.userList[i];
-      }
-    } else {
-      // TODO: send Error message to front end
-    }
-  });
+
 
   openSessionConnection();
 
