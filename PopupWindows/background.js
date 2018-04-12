@@ -22,7 +22,7 @@ function checkForUpdates() {
   //  console.log(myCurrentPage);
   //  console.log(mySessionID);
   //  console.log(myVideoURL);
-  console.log(myUserList[0]);
+  
 }
 
 function testLog(log) {

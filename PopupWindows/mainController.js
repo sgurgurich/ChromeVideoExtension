@@ -9,7 +9,7 @@ var myNickname;
 var mySessionID;
 var myCurrentPage;
 var myVideoURL;
-var myUserList = ["", "", "", "", ""];
+var myUserList;
 
 ///////////////////////////////////////////////////
 //  USER ACTIONS
@@ -118,16 +118,16 @@ function copyToClipboard() {
 
 }
 
-function playRequest(){
+function playRequest() {
   chrome.runtime.sendMessage({
     msg: "playVid",
   });
 }
 
-function pauseRequest(){
-    chrome.runtime.sendMessage({
-      msg: "pauseVid",
-    });
+function pauseRequest() {
+  chrome.runtime.sendMessage({
+    msg: "pauseVid",
+  });
 }
 
 
@@ -323,7 +323,6 @@ function loadError(error) {
 
 function loadNicknameElements() {
   document.getElementById("usergreeting").innerHTML = "Hey " + myNickname;
-  document.getElementById("user1").innerHTML = myNickname;
 }
 
 function loadSessionIdElements() {
@@ -331,13 +330,7 @@ function loadSessionIdElements() {
 }
 
 function loadParty() {
-  document.getElementById("user1").innerHTML = myUserList[0];
-
-  // TODO: We will get these from the Database
-  document.getElementById("user2").innerHTML = myUserList[1];
-  document.getElementById("user3").innerHTML = myUserList[2];
-  document.getElementById("user4").innerHTML = myUserList[3];
-  document.getElementById("user5").innerHTML = myUserList[4];
+  document.getElementById("userparty").innerHTML = myUserList;
 }
 
 function loadAllElements() {
@@ -402,11 +395,7 @@ function setLocalVars() {
   mySessionID = document.getElementById("sessionStorage").innerHTML;
   myCurrentPage = document.getElementById("pageStorage").innerHTML;
   myVideoURL = document.getElementById("urlStorage").innerHTML;
-  myUserList[0] = document.getElementById("user1Storage").innerHTML;
-  myUserList[1] = document.getElementById("user2Storage").innerHTML;
-  myUserList[2] = document.getElementById("user3Storage").innerHTML;
-  myUserList[3] = document.getElementById("user4Storage").innerHTML;
-  myUserList[4] = document.getElementById("user5Storage").innerHTML;
+  myUserList = document.getElementById("userListStorage").innerHTML;
 }
 ///////////////////////////////////////////////////
 //  ACTION LISTENERS
@@ -429,6 +418,20 @@ function startButtonActionListeners() {
   document.getElementById("leaveBt").addEventListener("click", leaveCurrentSession);
 }
 
+function formatUserArr(temp) {
+  var output = temp;
+
+  output = output + "<ul>";
+
+  for (var i; i < temp.length; i++) {
+    output = output + "<li>" + temp[i] + "</li>";
+  }
+
+  output = output + "</ul>";
+  return output;
+
+}
+
 function startMsgListeners() {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -449,12 +452,8 @@ function startMsgListeners() {
         populateVideoUrl();
       }
       if (request.msg === "update_userlistFG") {
-        var tempArr  = JSON.parse(request.data);
-        document.getElementById("user1Storage").innerHTML = tempArr.subject[0];
-        document.getElementById("user2Storage").innerHTML = tempArr.subject[1];
-        document.getElementById("user3Storage").innerHTML = tempArr.subject[2];
-        document.getElementById("user4Storage").innerHTML = tempArr.subject[3];
-        document.getElementById("user5Storage").innerHTML = tempArr.subject[4];
+        var tempArr = JSON.parse(request.data);
+        document.getElementById("userListStorage").innerHTML = formatUserArr(tempArr.subject);
       }
       if (request.msg === "nicknameError") {
         goToCurrentPage("page1");
