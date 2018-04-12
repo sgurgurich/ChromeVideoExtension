@@ -9,6 +9,7 @@ var myNickname;
 var mySessionID;
 var myCurrentPage;
 var myVideoURL;
+var myUserList = ["", "", "", "", ""];
 
 ///////////////////////////////////////////////////
 //  USER ACTIONS
@@ -44,7 +45,6 @@ function createSession() {
     msg: "generate_session"
   });
 
-//  generateSessionID();  // TEMPORARY
   loadParty();
   sendDataToBackground();
 }
@@ -58,11 +58,19 @@ function submitSessionID() {
 
   if (mySessionID.length == 8) {
     // TODO: Add if-statement to check database for this IDs
-    if (querySessionID() == true) {
+    if (querySessionID()) {
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "block";
-      loadCurrentSession();
+      myCurrentPage = "page4"
+
       sendDataToBackground();
+
+      chrome.runtime.sendMessage({
+        msg: "joinSession",
+      });
+
+      loadParty();
+
     } else {
       document.getElementById("sessIDError").style.display = "none";
       document.getElementById("sessNotFound").style.display = "block";
@@ -75,21 +83,9 @@ function submitSessionID() {
 
 function querySessionID() {
   // Check the database to see if the session ID is valid
+
+  //TODO: QUEREY SESSION ID
   return (true);
-}
-
-function generateSessionID() {
-  var firstChar = (Math.floor(Math.random() * 10)).toString();
-  var secondChar = (Math.floor(Math.random() * 10)).toString();
-  var thirdChar = (Math.floor(Math.random() * 10)).toString();
-  var fourthChar = (Math.floor(Math.random() * 10)).toString();
-  var fifthChar = (Math.floor(Math.random() * 10)).toString();
-  var sixthChar = (Math.floor(Math.random() * 10)).toString();
-  var seventhChar = (Math.floor(Math.random() * 10)).toString();
-  var eighthChar = (Math.floor(Math.random() * 10)).toString();
-
-  mySessionID = firstChar + secondChar + thirdChar + fourthChar + fifthChar + sixthChar + seventhChar + eighthChar;
-
 }
 
 function setVideoURL() {
@@ -101,7 +97,14 @@ function setVideoURL() {
 
 function gotoVideoURL() {
 
+  if (myVideoURL != null) {
+    chrome.runtime.sendMessage({
+      msg: "goto_URL",
+    });
+  }
+}
 
+function populateVideoUrl() {
 
 }
 
@@ -308,16 +311,16 @@ function loadSessionIdElements() {
 }
 
 function loadParty() {
-  document.getElementById("user1").innerHTML = myNickname;
+  document.getElementById("user1").innerHTML = myUserList[0];
 
   // TODO: We will get these from the Database
-  document.getElementById("user2").innerHTML = "";
-  document.getElementById("user3").innerHTML = "";
-  document.getElementById("user4").innerHTML = "";
-  document.getElementById("user5").innerHTML = "";
+  document.getElementById("user2").innerHTML = myUserList[1];
+  document.getElementById("user3").innerHTML = myUserList[2];
+  document.getElementById("user4").innerHTML = myUserList[3];
+  document.getElementById("user5").innerHTML = myUserList[4];
 }
 
-function loadAllElements(){
+function loadAllElements() {
   setLocalVars();
   loadNicknameElements();
   loadSessionIdElements();
@@ -377,11 +380,16 @@ function sendDataToBackground() {
 
 }
 
-function setLocalVars(){
+function setLocalVars() {
   myNickname = document.getElementById("nameStorage").innerHTML;
   mySessionID = document.getElementById("sessionStorage").innerHTML;
   myCurrentPage = document.getElementById("pageStorage").innerHTML;
   myVideoURL = document.getElementById("urlStorage").innerHTML;
+  myUserList[0] = document.getElementById("user1Storage").innterHTML;
+  myUserList[1] = document.getElementById("user2Storage").innterHTML;
+  myUserList[2] = document.getElementById("user3Storage").innterHTML;
+  myUserList[3] = document.getElementById("user4Storage").innterHTML;
+  myUserList[4] = document.getElementById("user5Storage").innterHTML;
 }
 ///////////////////////////////////////////////////
 //  ACTION LISTENERS
@@ -420,8 +428,15 @@ function startMsgListeners() {
         //loadSessionIdElements(request.data.subject);
       }
       if (request.msg === "update_URLFG") {
-        // TODO: Update URL Text
         document.getElementById("urlStorage").innerHTML = request.data.subject;
+        populateVideoUrl();
+      }
+      if (request.msg === "update_userlistFG") {
+        document.getElementById("user1Storage").innerHTML = request.data.subject[0];
+        document.getElementById("user2Storage").innerHTML = request.data.subject[1];
+        document.getElementById("user3Storage").innerHTML = request.data.subject[2];
+        document.getElementById("user4Storage").innerHTML = request.data.subject[3];
+        document.getElementById("user5Storage").innerHTML = request.data.subject[4];
       }
       if (request.msg === "nicknameError") {
         goToCurrentPage("page1");

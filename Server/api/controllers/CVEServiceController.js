@@ -1,59 +1,57 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  Task = mongoose.model('Tasks'),
   User = mongoose.model('User'),
-  Session = mongoose.model('Session'),
-  SessionUsers = mongoose.model('SessionUsers');
+  Session = mongoose.model('Session')
 
-exports.list_all_tasks = function(req, res) {
-  Task.find({}, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
+//exports.list_all_tasks = function(req, res) {
+//  Task.find({}, function(err, task) {
+//    if (err)
+//      res.send(err);
+//    res.json(task);
+//  });
+//};
 
-exports.create_a_task = function(req, res) {
-  var new_task = new Task(req.body);
-  new_task.save(function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
+//exports.create_a_task = function(req, res) {
+//  var new_task = new Task(req.body);
+//  new_task.save(function(err, task) {
+//    if (err)
+//      res.send(err);
+//    res.json(task);
+//  });
+//};
 
-exports.read_a_task = function(req, res) {
-  Task.findById(req.params.taskId, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
+//exports.read_a_task = function(req, res) {
+//  Task.findById(req.params.taskId, function(err, task) {
+//    if (err)
+//      res.send(err);
+//    res.json(task);
+//  });
+//};
 
-exports.update_a_task = function(req, res) {
-  Task.findOneAndUpdate({
-    _id: req.params.taskId
-  }, req.body, {
-    new: true
-  }, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
+//exports.update_a_task = function(req, res) {
+//  Task.findOneAndUpdate({
+//    _id: req.params.taskId
+//  }, req.body, {
+//    new: true
+//  }, function(err, task) {
+//    if (err)
+//      res.send(err);
+//    res.json(task);
+//  });
+//};
 
-exports.delete_a_task = function(req, res) {
-  Task.remove({
-    _id: req.params.taskId
-  }, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json({
-      message: 'Task successfully deleted'
-    });
-  });
-};
+//exports.delete_a_task = function(req, res) {
+//  Task.remove({
+//    _id: req.params.taskId
+//  }, function(err, task) {
+//    if (err)
+//      res.send(err);
+//    res.json({
+//      message: 'Task successfully deleted'
+//    });
+//  });
+//};
 
 
 //Chrome Video Extension Routes
@@ -126,25 +124,50 @@ exports.generate_session = function(req, res) {
 
 }
 
-function generate_uniquue_session(session_id) {
-  return Session
-    .findOne({
-      sessionId: session_id
-    })
-    .then(function(session) {
-      if (session) {
-        console.log("Session found, trying again");
-        new_id = generate_random_id();
-        return generate_uniquue_session(new_id);
+exports.get_session = function(req, res) {
+  Session.findOne({sessionId: req.params.sessionid},
+    function(err, session) {
+      if(err) console.log(err);
+      var found = false;
+      if(session){
+        found = true;
+	console.log(session);
+        res.json({"found":found, 
+	"userList": session.userList,
+	"videoUrl": session.videoUrl});
       }
-      console.log("Found unique id");
-      return session_id;
-    })
-    .catch(function(err) {
-      console.log(error);
+      else{
+        res.json({"found":found, 
+	"userList": "Session not found.",
+	"videoUrl": "Session not found."});
+      }
     });
+}
 
+exports.add_user_to_session = function(req, res){
+  Session.findOneAndUpdate({sessionId: req.params.sessionid},
+    {$push: {userList:req.body.nickname}},
+    {new: true},
+    function(err, session){
+      if(err) console.log(err);
+      var found = false;
+      if(session){
+        found = true;
+	console.log(session);
+        res.json({"found":found, 
+	"userList": session.userList,
+	"videoUrl": session.videoUrl});
+      }
+      else{
+        res.json({"found":found, 
+	"userList": "Session not found.",
+	"videoUrl": "Session not found."});
+      }
+    });
+}
 
+exports.toDo = function(req, res) {
+  res.json({data: "Functionality not available yet."});
 }
 
 function generate_random_id() {

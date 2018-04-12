@@ -5,19 +5,23 @@
 // John Cutsavage
 ///////////////////////////////////////////////////
 // SET THIS BIT TO TRUE FOR LOCAL DEVELOPMENT
-var local_dev = true;
+var local_dev = false;
 ///////////////////////////////////////////////////
 
 var myNickname;
 var myUserID;
 var myCurrentPage;
 var mySessionID;
+var myUserList = ["", "", "", "", ""];
+var myVideoURL;
+
 var ws;
 
 function checkForUpdates() {
   console.log(myNickname);
   console.log(myCurrentPage);
   console.log(mySessionID);
+  console.log(myVideoURL);
 }
 
 function testLog(log) {
@@ -29,42 +33,162 @@ function openSessionConnection() {
     ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
     ws.onopen = function() {
       ws.send({
-        "sessionID": mySessionID
+        "sessionID": mySessionID,
+        "userID": myNickname
       });
     };
   }
   // Listen for messages
   ws.addEventListener('message', function(event) {
     console.log('Message from server ', event.data);
+    switch (event.type) {
+      case "sessionInfo":
+        // get session data
+        break;
+      case "updateAlert":
+        updateAllInfo();
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+function updateAllInfo(){
+
+  chrome.runtime.sendMessage({
+    msg: "update_URLFG",
+    data: {
+      subject: myVideoURL
+    }
+  });
+
+  chrome.runtime.sendMessage({
+    msg: "update_userlistFG",
+    data: {
+      subject: myUserList
+    }
   });
 }
 
 function sendPlayRequest() {
   ws.send({
-    "PlayRequest": true
+    "play": true
   });
 }
 
 function sendPauseRequest() {
   ws.send({
-    "PauseRequest": true
+    "pause": true
   });
 }
 
-function initWebSockets() {
+function sendUpdateRequest() {
+  ws.send({
+    "update": true
+  });
+}
 
-  if ("WebSocket" in window) {
-    ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
-    ws.onopen = function() {
-      ws.send("Hello Trim");
-    };
-  }
+function addNickname() {
+  $.get("http://vps.bellisimospizza.com/user/" + myNickname, function(response) {
+    console.log( "success" );
+    if (response.found == true) {
+      myCurrentPage = "page1";
+      myNickname = " ";
+      chrome.runtime.sendMessage({
+        msg: "nicknameError"
+      });
+    } else {
+      console.log( "trying write" );
+      $.post("http://vps.bellisimospizza.com/user/" + myNickname, function(data) {
+        myUserID = data._id;
+      });
+      myCurrentPage = "page2";
+      chrome.runtime.sendMessage({
+        msg: "nicknamePass"
+      });
+    }
+  });
+}
 
-  // Listen for messages
-  ws.addEventListener('message', function(event) {
-    console.log('Message from server ', event.data);
+function generateSession() {
+  // Query Database for session ID
+  $.get("http://vps.bellisimospizza.com/session/", function(response) {
+    console.log( "success" );
+    mySessionID = response.sessionId;
+    $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
+      nickname: myNickname
+    }, function(data) {
+      if (data.found) {
+        for (var i = 0; i < 5; i++) {
+          myUserList[i] = data.userList[i];
+        }
+        console.log("SUCK A DICK BOIS");
+      } else {
+        // TODO: send Error message to front end
+      }
+    });
   });
 
+
+
+  openSessionConnection();
+
+  // Send session info and session id to main
+  chrome.runtime.sendMessage({
+    msg: "update_sessionIDFG",
+    data: {
+      subject: mySessionID
+    }
+  });
+}
+
+function getAllFromDB(){
+  $.get("http://vps.bellisimospizza.com/session/" + mySessionID,  function(data) {
+    myUserList = data.userList;
+    myVideoURL = data.videoUrl;
+  });
+}
+
+function updateURL(){
+
+  // TODO: POST Url stuff
+
+  ws.send({
+      type: "update",
+      sessionID: mySessionID
+    });
+}
+
+function goToURL(){
+  if (myVideoURL != null){
+      chrome.tabs.create({ url: myVideoURL });
+  }
+
+}
+
+function addMeToSession(){
+  $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
+    nickname: myNickname
+  }, function(data) {
+    if (data.found) {
+      for (var i = 0; i < 5; i++) {
+        myUserList[i] = data.userList[i];
+      }
+    } else {
+      // TODO: send Error message to front end
+    }
+  });
+}
+
+function checkIfSessionExists(){
+  $.get("http://vps.bellisimospizza.com/session/" + mySessionID,  function(data) {
+    if (data.found){
+      addMeToSession();
+    }else{
+      //TODO: SEND ERROR TO FRONT END
+    }
+  });
 }
 
 
@@ -111,26 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
       if (request.msg == "generate_session") {
-
-        // Query Database for session ID
-        $.get("http://vps.bellisimospizza.com/session/" + myNickname, function(response) {
-          console.log( "success" );
-          mySessionID = response.sessiomId;
-        });
-        // send session id to Server
-        openSessionConnection();
-
-        // Get back users and session info
-        ws.send("Give me session info");
-
-        // Send session info and session id to main
-        chrome.runtime.sendMessage({
-          msg: "update_sessionIDFG",
-          data: {
-            subject: mySessionID
-          }
-        });
+        generateSession();
       }
+
     });
 
   chrome.runtime.onMessage.addListener(
@@ -146,6 +253,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (request.msg === "update_URL") {
         myVideoURL = request.data.subject;
+        updateURL();
+      }
+      if (request.msg === "goto_URL") {
+        goToURL();
+      }
+      if (request.msg === "joinSession") {
+        addMeToSession();
       }
     });
 
@@ -153,30 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
         if (request.msg === "verifyNickname") {
-          $.get("http://vps.bellisimospizza.com/user/" + myNickname, function(response) {
-            console.log( "success" );
-            if (response.found == true) {
-              myCurrentPage = "page1";
-              myNickname = " ";
-              chrome.runtime.sendMessage({
-                msg: "nicknameError"
-              });
-            } else {
-              console.log( "trying write" );
-              $.post("http://vps.bellisimospizza.com/user/" + myNickname, function(data) {
-                myUserID = data._id;
-              });
-              myCurrentPage = "page2";
-              chrome.runtime.sendMessage({
-                msg: "nicknamePass"
-              });
-            }
-          });
+          addNickname();
         }
       });
-
-    //initWebSockets();
-
   } else {
     chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
@@ -189,6 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  //var intervalID = setInterval(checkForUpdates, 2000);
+  var intervalID = setInterval(checkForUpdates, 2000);
 
 });
