@@ -106,7 +106,12 @@ function populateVideoUrl() {
 }
 
 function copyToClipboard() {
-
+  const el = document.createElement('textarea');
+  el.value = document.getElementById("currSession").innerHTML;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
 }
 
 function playRequest() {
@@ -321,7 +326,7 @@ function loadNicknameElements() {
 }
 
 function loadSessionIdElements() {
-  document.getElementById("currSession").innerHTML = "Session ID: " + mySessionID;
+  document.getElementById("currSession").innerHTML = mySessionID;
 }
 
 function loadParty() {

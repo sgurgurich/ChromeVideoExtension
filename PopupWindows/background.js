@@ -84,8 +84,6 @@ function formatUserArr(temp) {
   }
 
   output = output + "</ul>";
-  console.log(output);
-  console.log(temp);
   return output;
 }
 
@@ -339,6 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  var intervalID = setInterval(checkForUpdates, 2000);
+  //var intervalID = setInterval(checkForUpdates, 2000);
 
 });
