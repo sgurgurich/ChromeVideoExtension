@@ -350,6 +350,10 @@ function loadValuesFromBG() {
   });
 
   chrome.runtime.sendMessage({
+    msg: "request_userlistFG"
+  });
+
+  chrome.runtime.sendMessage({
     msg: "request_URLFG"
   });
 }

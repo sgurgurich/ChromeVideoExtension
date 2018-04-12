@@ -171,7 +171,7 @@ function goToURL(){
 function addMeToSession(){
 
   openSessionConnection();
-  
+
   $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
     nickname: myNickname
   }, function(data) {
@@ -235,6 +235,14 @@ document.addEventListener('DOMContentLoaded', () => {
           msg: "update_URLFG",
           data: {
             subject: myVideoURL
+          }
+        });
+      }
+      if (request.msg == "request_userlistFG") {
+        chrome.runtime.sendMessage({
+          msg: "update_userlistFG",
+          data: {
+            subject: myUserList
           }
         });
       }
