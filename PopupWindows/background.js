@@ -73,21 +73,21 @@ function updateAllInfo(){
 }
 
 function sendPlayRequest() {
-  ws.send({
+  ws.send(JSON.stringify({
     "play": true
-  });
+  }));
 }
 
 function sendPauseRequest() {
-  ws.send({
+  ws.send(JSON.stringify({
     "pause": true
-  });
+  }));
 }
 
 function sendUpdateRequest() {
-  ws.send({
+  ws.send(JSON.stringify({
     "update": true
-  });
+  }));
 }
 
 function addNickname() {
@@ -155,10 +155,10 @@ function updateURL(){
 
   // TODO: POST Url stuff
 
-  ws.send({
+  ws.send(JSON.stringify({
       type: "update",
       sessionID: mySessionID
-    });
+    }));
 }
 
 function goToURL(){
