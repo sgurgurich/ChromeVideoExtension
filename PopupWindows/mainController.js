@@ -61,6 +61,11 @@ function submitSessionID() {
     if (querySessionID() == true) {
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "block";
+
+      chrome.runtime.sendMessage({
+        msg: "joinSession",
+      });
+
       loadCurrentSession();
       sendDataToBackground();
     } else {
@@ -75,6 +80,8 @@ function submitSessionID() {
 
 function querySessionID() {
   // Check the database to see if the session ID is valid
+
+  //TODO: QUEREY SESSION ID
   return (true);
 }
 
@@ -87,12 +94,15 @@ function setVideoURL() {
 
 function gotoVideoURL() {
 
-
-
+  if (myVideoURL != null) {
+    chrome.runtime.sendMessage({
+      msg: "goto_URL",
+    });
+  }
 }
 
-function populateVideoUrl(){
-    document.getElementById("currentURL").innerHTML =  myVideoURL;
+function populateVideoUrl() {
+
 }
 
 function copyToClipboard() {

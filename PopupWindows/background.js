@@ -5,7 +5,7 @@
 // John Cutsavage
 ///////////////////////////////////////////////////
 // SET THIS BIT TO TRUE FOR LOCAL DEVELOPMENT
-var local_dev = true;
+var local_dev = false;
 ///////////////////////////////////////////////////
 
 var myNickname;
@@ -33,7 +33,8 @@ function openSessionConnection() {
     ws = new WebSocket("ws://vps.bellisimospizza.com:8080");
     ws.onopen = function() {
       ws.send({
-        "sessionID": mySessionID
+        "sessionID": mySessionID,
+        "userID": myNickname
       });
     };
   }
@@ -122,14 +123,14 @@ function generateSession() {
   }, function(data) {
     if (data.found) {
       for (var i = 0; i < 5; i++) {
-        myUserList[i] = data.userlist[i];
+        myUserList[i] = data.userList[i];
       }
     } else {
       // TODO: send Error message to front end
     }
   });
 
-  //openSessionConnection();
+  openSessionConnection();
 
   // Send session info and session id to main
   chrome.runtime.sendMessage({
@@ -140,6 +141,43 @@ function generateSession() {
   });
 }
 
+function getAllFromDB(){
+  $.get("http://vps.bellisimospizza.com/session/" + mySessionID,  function(data) {
+    myUserList = data.userList;
+    myVideoURL = data.videoUrl;
+  });
+}
+
+function updateURL(){
+
+  // TODO: POST Url stuff
+
+  ws.send({
+      type: "update",
+      sessionID: mySessionID
+    });
+}
+
+function goToURL(){
+  if (myVideoURL != null){
+      chrome.tabs.create({ url: myVideoURL });
+  }
+
+}
+
+function addMeToSession(){
+  $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
+    nickname: myNickname
+  }, function(data) {
+    if (data.found) {
+      for (var i = 0; i < 5; i++) {
+        myUserList[i] = data.userList[i];
+      }
+    } else {
+      // TODO: send Error message to front end
+    }
+  });
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -187,9 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg == "generate_session") {
         generateSession();
       }
-      if (request.msg == "update_url") {
-        updateURL();
-      }
+
     });
 
   chrome.runtime.onMessage.addListener(
@@ -205,6 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (request.msg === "update_URL") {
         myVideoURL = request.data.subject;
+        updateURL();
+      }
+      if (request.msg === "goto_URL") {
+        goToURL();
+      }
+      if (request.msg === "joinSession") {
+        addMeToSession();
       }
     });
 
