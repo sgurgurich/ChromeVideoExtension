@@ -91,7 +91,13 @@ function querySessionID() {
 function setVideoURL() {
 
   myVideoURL = document.getElementById("urlName").value;
-  sendDataToBackground();
+
+  chrome.runtime.sendMessage({
+    msg: "update_URL",
+    data: {
+      subject: myVideoURL
+    }
+  });
 
 }
 
@@ -368,13 +374,6 @@ function sendDataToBackground() {
     msg: "update_sessionid",
     data: {
       subject: mySessionID
-    }
-  });
-
-  chrome.runtime.sendMessage({
-    msg: "update_URL",
-    data: {
-      subject: myVideoURL
     }
   });
 

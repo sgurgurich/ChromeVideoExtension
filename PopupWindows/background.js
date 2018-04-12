@@ -22,6 +22,7 @@ function checkForUpdates() {
   console.log(myCurrentPage);
   console.log(mySessionID);
   console.log(myVideoURL);
+  console.log(myUserList);
 }
 
 function testLog(log) {
@@ -43,9 +44,6 @@ function openSessionConnection() {
   ws.addEventListener('message', function(event) {
     console.log('Message from server ', event.data);
     switch (event.data) {
-      case "sessionInfo":
-        // get session data
-        break;
       case "updateAlert":
         updateAllInfo();
         break;
@@ -56,6 +54,8 @@ function openSessionConnection() {
 }
 
 function updateAllInfo(){
+
+  getAllFromDB();
 
   chrome.runtime.sendMessage({
     msg: "update_URLFG",
