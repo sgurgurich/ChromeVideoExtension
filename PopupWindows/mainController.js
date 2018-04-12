@@ -388,11 +388,11 @@ function setLocalVars() {
   mySessionID = document.getElementById("sessionStorage").innerHTML;
   myCurrentPage = document.getElementById("pageStorage").innerHTML;
   myVideoURL = document.getElementById("urlStorage").innerHTML;
-  myUserList[0] = document.getElementById("user1Storage").innterHTML;
-  myUserList[1] = document.getElementById("user2Storage").innterHTML;
-  myUserList[2] = document.getElementById("user3Storage").innterHTML;
-  myUserList[3] = document.getElementById("user4Storage").innterHTML;
-  myUserList[4] = document.getElementById("user5Storage").innterHTML;
+  myUserList[0] = document.getElementById("user1Storage").innerHTML;
+  myUserList[1] = document.getElementById("user2Storage").innerHTML;
+  myUserList[2] = document.getElementById("user3Storage").innerHTML;
+  myUserList[3] = document.getElementById("user4Storage").innerHTML;
+  myUserList[4] = document.getElementById("user5Storage").innerHTML;
 }
 ///////////////////////////////////////////////////
 //  ACTION LISTENERS
@@ -435,11 +435,12 @@ function startMsgListeners() {
         populateVideoUrl();
       }
       if (request.msg === "update_userlistFG") {
-        document.getElementById("user1Storage").innerHTML = request.data.subject[0];
-        document.getElementById("user2Storage").innerHTML = request.data.subject[1];
-        document.getElementById("user3Storage").innerHTML = request.data.subject[2];
-        document.getElementById("user4Storage").innerHTML = request.data.subject[3];
-        document.getElementById("user5Storage").innerHTML = request.data.subject[4];
+        var tempArr  = JSON.parse(request.data);
+        document.getElementById("user1Storage").innerHTML = tempArr.subject[0];
+        document.getElementById("user2Storage").innerHTML = tempArr.subject[1];
+        document.getElementById("user3Storage").innerHTML = tempArr.subject[2];
+        document.getElementById("user4Storage").innerHTML = tempArr.subject[3];
+        document.getElementById("user5Storage").innerHTML = tempArr.subject[4];
       }
       if (request.msg === "nicknameError") {
         goToCurrentPage("page1");

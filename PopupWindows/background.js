@@ -18,11 +18,11 @@ var myVideoURL;
 var ws;
 
 function checkForUpdates() {
-  console.log(myNickname);
-  console.log(myCurrentPage);
-  console.log(mySessionID);
-  console.log(myVideoURL);
-  console.log(myUserList);
+  //console.log(myNickname);
+  //  console.log(myCurrentPage);
+  //  console.log(mySessionID);
+  //  console.log(myVideoURL);
+  console.log(myUserList[0]);
 }
 
 function testLog(log) {
@@ -53,7 +53,7 @@ function openSessionConnection() {
   });
 }
 
-function updateAllInfo(){
+function updateAllInfo() {
 
   getAllFromDB();
 
@@ -64,11 +64,15 @@ function updateAllInfo(){
     }
   });
 
+  var tempList = {
+    subject: myUserList
+  }
+  console.log(tempList);
+  console.log(JSON.stringify(tempList));
+
   chrome.runtime.sendMessage({
     msg: "update_userlistFG",
-    data: {
-      subject: myUserList
-    }
+    data: JSON.stringify(tempList)
   });
 }
 
@@ -124,7 +128,6 @@ function generateSession() {
         for (var i = 0; i < 5; i++) {
           myUserList[i] = data.userList[i];
         }
-        console.log("SUCK A DICK BOIS");
       } else {
         // TODO: send Error message to front end
       }
@@ -144,31 +147,33 @@ function generateSession() {
   });
 }
 
-function getAllFromDB(){
-  $.get("http://vps.bellisimospizza.com/session/" + mySessionID,  function(data) {
+function getAllFromDB() {
+  $.get("http://vps.bellisimospizza.com/session/" + mySessionID, function(data) {
     myUserList = data.userList;
     myVideoURL = data.videoUrl;
   });
 }
 
-function updateURL(){
+function updateURL() {
 
   // TODO: POST Url stuff
 
   ws.send(JSON.stringify({
-      type: "update",
-      sessionID: mySessionID
-    }));
+    type: "update",
+    sessionID: mySessionID
+  }));
 }
 
-function goToURL(){
-  if (myVideoURL != null){
-      chrome.tabs.create({ url: myVideoURL });
+function goToURL() {
+  if (myVideoURL != null) {
+    chrome.tabs.create({
+      url: myVideoURL
+    });
   }
 
 }
 
-function addMeToSession(){
+function addMeToSession() {
 
   openSessionConnection();
 
@@ -185,11 +190,11 @@ function addMeToSession(){
   });
 }
 
-function checkIfSessionExists(){
-  $.get("http://vps.bellisimospizza.com/session/" + mySessionID,  function(data) {
-    if (data.found){
+function checkIfSessionExists() {
+  $.get("http://vps.bellisimospizza.com/session/" + mySessionID, function(data) {
+    if (data.found) {
       addMeToSession();
-    }else{
+    } else {
       //TODO: SEND ERROR TO FRONT END
     }
   });
@@ -238,12 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+
       if (request.msg == "request_userlistFG") {
+        var tempList = {
+          subject: myUserList
+        }
         chrome.runtime.sendMessage({
           msg: "update_userlistFG",
-          data: {
-            subject: myUserList
-          }
+          data: JSON.stringify(tempList)
         });
       }
       if (request.msg == "generate_session") {
@@ -272,6 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (request.msg === "joinSession") {
         addMeToSession();
+      }
+      if (request.msg === "logME") {
+        testLog("AHHHHHHHH");
       }
     });
 
