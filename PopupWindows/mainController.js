@@ -62,12 +62,14 @@ function submitSessionID() {
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "block";
 
+      sendDataToBackground();
+
       chrome.runtime.sendMessage({
         msg: "joinSession",
       });
 
       loadCurrentSession();
-      sendDataToBackground();
+
     } else {
       document.getElementById("sessIDError").style.display = "none";
       document.getElementById("sessNotFound").style.display = "block";
