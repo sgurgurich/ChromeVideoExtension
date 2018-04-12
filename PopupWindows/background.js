@@ -169,6 +169,9 @@ function goToURL(){
 }
 
 function addMeToSession(){
+
+  openSessionConnection();
+  
   $.post("http://vps.bellisimospizza.com/session/" + mySessionID, {
     nickname: myNickname
   }, function(data) {
