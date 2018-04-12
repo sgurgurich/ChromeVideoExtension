@@ -48,8 +48,11 @@ function openSessionConnection() {
         updateAllInfo();
         break;
       case "play":
-
+        sendPlayOrPause("play");
+        break;
       case "pause":
+        sendPlayOrPause("pause");
+        break;
       default:
         break;
     }
