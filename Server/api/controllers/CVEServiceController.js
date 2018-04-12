@@ -202,7 +202,6 @@ exports.remove_user_from_session = function(req, res) {
           "found": found
         });
       }
-    }
   });
 }
 
