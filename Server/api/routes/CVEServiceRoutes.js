@@ -4,15 +4,6 @@ module.exports = function(app) {
   var controller = require('../controllers/CVEServiceController');
 
   //controller Routes
-  app.route('/tasks')
-    .get(controller.list_all_tasks)
-    .post(controller.create_a_task);
-
-  app.route('/tasks/:taskId')
-    .get(controller.read_a_task)
-    .put(controller.update_a_task)
-    .delete(controller.delete_a_task);
-
   app.route('/user/:nickname')
     .get(controller.does_user_exist)
     .post(controller.add_user);
@@ -20,5 +11,14 @@ module.exports = function(app) {
     
   app.route('/session')
     .get(controller.generate_session);
+    
+  app.route('/session/:sessionid')
+    .get(controller.get_session)
+    .post(controller.add_user_to_session)
+    .put(controller.toDo);
+    
+  app.route('/url/:sessionid')
+    .get(controller.toDo)
+    .post(controller.toDo);
 };
 
