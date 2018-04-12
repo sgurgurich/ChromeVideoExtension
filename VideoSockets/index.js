@@ -19,21 +19,27 @@ var CLIENTS = {};
 var SESSIONS = {};
 
 wss.on('connection', (ws) => {
-    //connection is up, let's add a simple simple event
         ws.on('message', (theMessage) => {
-        message = JSON.parse(theMessage);
-        console.log(message);
-        console.log(message.type);
-        switch (message.type){
-            case "newconnection":
-                ws.send("you're a new connection");
-                createNewConnection(ws,message.sessionID,message.userID);
-                broadcastUpdateGUI(message.sessionID);
-                break;
-            case "update":
-                break;
-            default:
-                ws.send("how did you get here..?");
+            console.log("\nmessage\n"+theMessage);
+            console.log("\n\n");
+            message = JSON.parse(theMessage);
+            console.log(message);
+            console.log(message.type);
+            switch (message.type){
+                case "newconnection":
+                    createNewConnection(ws,message.sessionID,message.userID);
+                    broadcastUpdateGUI(message.sessionID);
+                    break;
+                case "update":
+                    break;
+                case "play":
+                    broadcastVideoStatus("play", message.sessionID);
+                    break;
+                case "pause":
+                    broadcastVideoStatus("pause", message.sessionID);
+                    break;
+                default:
+                    ws.send("how did you get here..?");
         }
         //log the received message and send it back to the client
     });
@@ -44,7 +50,7 @@ function createNewConnection(ws,sessionID,userID) {
         //store the userID and sessionID
         CLIENTS[userID] = ws;
         if(sessionID in SESSIONS) {
-            SESSIONS[sessionID] = SESSIONS[sessionID].push(ws);
+            SESSIONS[sessionID].push(ws);
         }
         else {
             SESSIONS[sessionID] = [ws];
@@ -54,6 +60,12 @@ function broadcastUpdateGUI(sessionID) {
     var clients = SESSIONS[sessionID];
     for (var i=0; i<clients.length; i++) {
         clients[i].send("updateAlert");
+    }
+}
+function broadcastVideoStatus(pauseOrPlay, sessionID) {
+    var clients = SESSIONS[sessionID];
+    for (var i=0; i<clients.length; i++) {
+        clients[i].send(pauseOrPlay);
     }
 }
 
