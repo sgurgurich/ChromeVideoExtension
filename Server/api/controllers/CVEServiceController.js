@@ -226,6 +226,7 @@ exports.set_session_url = function(req, res){
 function(err,session){
   if(err) console.log(err);
   if(session){
+    console.log(session);
     res.json({"success": true});
   }
   else{
