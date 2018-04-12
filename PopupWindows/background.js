@@ -41,9 +41,8 @@ function openSessionConnection() {
   }
   // Listen for messages
   ws.addEventListener('message', function(event) {
-    console.log('Message from server ', event);
-    var temp = JSON.parse(event.data);
-    switch (temp.type) {
+    console.log('Message from server ', event.data);
+    switch (event.data) {
       case "sessionInfo":
         // get session data
         break;
