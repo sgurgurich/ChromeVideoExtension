@@ -58,9 +58,10 @@ function submitSessionID() {
 
   if (mySessionID.length == 8) {
     // TODO: Add if-statement to check database for this IDs
-    if (querySessionID() == true) {
+    if (querySessionID()) {
       document.getElementById("page3").style.display = "none";
       document.getElementById("page4").style.display = "block";
+      myCurrentPage = "page4"
 
       sendDataToBackground();
 
@@ -68,7 +69,7 @@ function submitSessionID() {
         msg: "joinSession",
       });
 
-      loadCurrentSession();
+      loadParty();
 
     } else {
       document.getElementById("sessIDError").style.display = "none";
