@@ -219,12 +219,14 @@ exports.get_session_url = function(req, res){
 }
 
 exports.set_session_url = function(req, res){
+  console.log("Request received");
   Session.findOneAndUpdate({sessionId:req.params.sessionid},
   {$set: {videoUrl: req.body.url}},
   {new: true},
 function(err,session){
   if(err) console.log(err);
   if(session){
+    console.log(session);
     res.json({"success": true});
   }
   else{
