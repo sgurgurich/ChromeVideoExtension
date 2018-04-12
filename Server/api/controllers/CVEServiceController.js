@@ -202,7 +202,6 @@ exports.remove_user_from_session = function(req, res) {
           "found": found
         });
       }
-    }
   });
 }
 
@@ -226,10 +225,10 @@ exports.set_session_url = function(req, res){
 function(err,session){
   if(err) console.log(err);
   if(session){
-    res.json("success": true);
+    res.json({"success": true});
   }
   else{
-    res.json("success": false);
+    res.json({"success": false});
   }
 });
 }
