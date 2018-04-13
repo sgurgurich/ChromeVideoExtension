@@ -12,7 +12,7 @@ function startButtonActionListeners() {
   document.getElementById("back3").addEventListener("click", goBackToP2);
   document.getElementById("playBt").addEventListener("click", playRequest);
   document.getElementById("pauseBt").addEventListener("click", pauseRequest);
-
+  document.getElementById("restartBt").addEventListener("click", restartRequest);
   document.getElementById("cpToClip").addEventListener("click", copyToClipboard);
   document.getElementById("setURLBt").addEventListener("click", setVideoURL);
   document.getElementById("gotoURLBt").addEventListener("click", gotoVideoURL);

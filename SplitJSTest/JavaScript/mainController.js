@@ -115,11 +115,11 @@ function pauseRequest() {
   });
 }
 
-
-function pauseVideo() {
-
+function restartRequest(){
+  chrome.runtime.sendMessage({
+    msg: "restartVideo",
+  });
 }
-
 function goBackToP1() {
 
   chrome.runtime.sendMessage({
@@ -193,5 +193,5 @@ document.addEventListener('DOMContentLoaded', () => {
   startButtonActionListeners();
   disableErrors();
   disableLoadMsg();
-  var intervalID = setInterval(loadAllElements, 10);
+  var intervalID = setInterval(loadAllElements, 500);
 });
