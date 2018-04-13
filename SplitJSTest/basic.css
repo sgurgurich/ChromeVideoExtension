@@ -1,0 +1,55 @@
+body {
+  background-color: navy;
+  width: 200px;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+}
+
+div {
+  color: white;
+  text-align: center;
+}
+
+p.big {
+  font-family: verdana;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+button {
+  background-color: #4CAF50;
+  /* Green */
+  border: none;
+  color: white;
+  padding: 6px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #145A32;
+
+}
+
+button:active {
+  background-color: #9A33FF;
+  /* Green */
+  border: none;
+  color: white;
+  padding: 6px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.currentURL {
+  color: white;
+  font-size: 8px;
+  text-align: center;
+}

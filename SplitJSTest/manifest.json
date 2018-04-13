@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+
+  "name": "Chrome Video Sychronizer",
+  "description": "This extension will sync the videos of multiple users",
+  "version": "1.0",
+
+  "permissions": [
+    "tabs"
+  ],
+
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "css": ["basic.css"],
+      "js": ["./JavaScript/mainController.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": [
+      "ThirdParty/jquery-3.3.1.min.js",
+      "background.js"
+    ]
+  },
+
+  "browser_action": {
+    "default_icon": "SyncIcon.png",
+    "default_popup": "SinglePage.html"
+  },
+
+  "permissions": [
+    "activeTab",
+    "storage"
+  ]
+
+
+}

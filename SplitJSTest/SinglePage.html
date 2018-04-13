@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Chrome Video Synchronizer</title>
+  <link rel="stylesheet" href="basic.css">
+  <script src="./JavaScript/ActionListeners.js"></script>
+  <script src="./JavaScript/MessageSenders.js"></script>
+  <script src="./JavaScript/PageActions.js"></script>
+  <script src="./JavaScript/mainController.js"></script>
+</head>
+
+<body>
+  <div id="page1">
+    <h1>Welcome!</h1>
+    <div id="nameError">
+      <label>
+        <font color="red">ERROR: nickname must be at least 3 characters!</font>
+      </label>
+    </div>
+    <div id="nameNotAvailErr">
+      <label>
+        <font color="red">ERROR: nickname is already being used!</font>
+      </label>
+    </div>
+    <div id="loadingMsg">
+      <label>
+        <font color="yellow">Loading...</font>
+      </label>
+    </div>
+    <label>Enter a nickname:</label>
+    <p class="big"><input type="text" name="fname" id="nameInput"></p>
+    <button type="button" id="submitName">Submit</button>
+  </div>
+
+  <div id="page2">
+    <h1 id="usergreeting"></h1>
+    <label>Please make a selection:</label>
+    <p class="big"><button type="button" id="createSess">Create a Session</button></p>
+    <p class="big"><button type="button" id="joinSess">Join a Session</button></p>
+    <p class="big"><button type="button" id="back2">Back</button></p>
+  </div>
+
+  <div id="page3">
+    <h1>You're ready to join a session!</h1>
+    <div id="sessIDError">
+      <label>
+        <font color="red">ERROR: sessionID must be 8 characters!</font>
+      </label>
+    </div>
+    <div id="sessNotFound">
+      <label>
+        <font color="red">ERROR: session not found!</font>
+      </label>
+    </div>
+    <label>Enter a Session ID:</label>
+    <p class="big"><input type="text" name="sessName" id="sessInput"></p>
+    <button type="button" id="submitID">Submit</button>
+    <p class="big"><button type="button" id="back3">Back</button></p>
+  </div>
+
+  <div id="page4">
+    <h1>Your Current Session</h1>
+    <p class="big">
+      <label>Session ID:</label>
+      <label id="currSession"></label>
+      <button type="button" id="cpToClip">Copy</button>
+    </p>
+    <p class="big">
+      <label>Video URL:</label>
+      <div id="urlFound">
+        <font color="orange">URL Found! Hit "GoToURL"</font>
+      </div>
+      <input type="text" name="fname" id="urlName">
+      <button type="button" id="setURLBt">Set URL</button>
+      <button type="button" id="gotoURLBt">Go To URL</button>
+    </p>
+    <hr>
+    <p><button type="button" id="playBt">> Play</button>
+      <button type="button" id="pauseBt"> || Pause</button>
+    </p>
+    <label>Your Party:</label>
+    <div id="userparty"></div>
+    <label id="leaveParty"></label>
+    <p><button type="button" id="leaveBt">Leave Party</button></p>
+    </label>
+  </div>
+
+  <div id="storage">
+    <div id="nameStorage"></div>
+    <div id="sessionStorage"></div>
+    <div id="pageStorage"></div>
+    <div id="urlStorage"></div>
+    <div id="userListStorage"></div>
+  </div>
+
+
+</body>
+
+</html>
