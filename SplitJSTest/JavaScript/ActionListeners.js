@@ -24,7 +24,6 @@ function startMsgListeners() {
     function(request, sender, sendResponse) {
       if (request.msg === "update_nicknameFG") {
         document.getElementById("nameStorage").innerHTML = request.data.subject;
-        //loadNicknameElements(request.data.subject);
       }
       if (request.msg === "update_pageFG") {
         document.getElementById("pageStorage").innerHTML = request.data.subject;
@@ -32,17 +31,21 @@ function startMsgListeners() {
       }
       if (request.msg === "update_sessionidFG") {
         document.getElementById("sessionStorage").innerHTML = request.data.subject;
-        //loadSessionIdElements(request.data.subject);
       }
       if (request.msg === "update_URLFG") {
         document.getElementById("urlStorage").innerHTML = request.data.subject;
-        populateVideoUrl();
+        if (myVideoURL.length >= 10){
+          document.getElementById("urlFound").style.display = "block";
+        //  document.getElementById("urlFound").innerHTML = typeof(myVideoURL);
+        }
       }
       if (request.msg === "update_userlistFG") {
         document.getElementById("userListStorage").innerHTML = request.data.subject;
       }
       if (request.msg === "nicknameError") {
         goToCurrentPage("page1");
+        disableErrors();
+        disableLoadMsg();
         loadError("nickname");
       }
       if (request.msg === "nicknamePass") {
@@ -50,13 +53,12 @@ function startMsgListeners() {
       }
       if (request.msg === "sessionError") {
         goToCurrentPage("page3");
+        disableErrors();
+        disableLoadMsg();
         loadError("session");
       }
-      if (request.msg === "play_the_video") {
-        playVideo();
-      }
-      if (request.msg === "pause_the_video") {
-        pauseVideo();
+      if (request.msg === "sessionPass") {
+        goToCurrentPage("page4");
       }
 
     });

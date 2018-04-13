@@ -3,10 +3,7 @@
 // Zach Adam
 // Trim Ballanca
 // John Cutsavage
-///////////////////////////////////////////////////
-// SET THIS BIT TO TRUE FOR LOCAL DEVELOPMENT
-var local_dev = false;
-///////////////////////////////////////////////////
+
 
 var myNickname;
 var myUserID;
@@ -15,8 +12,8 @@ var mySessionID;
 var myUserList = [];
 var myUserString;
 var myVideoURL;
-
 var ws;
+
 
 function checkForUpdates() {
   //console.log(myNickname);
@@ -60,16 +57,62 @@ function openSessionConnection() {
   });
 }
 
+function playVideo(){
+  var tab;
+  var url;
+
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    tab = tabs[0];
+    url = tab.url;
+  });
+
+  var injectionCode = ['var script = document.createElement(\'script\');',
+    'script.src = \'https://code.jquery.com/jquery-1.11.0.min.js\';',
+    'script.type = \'text/javascript\';',
+    'document.getElementsByTagName(\'head\')[0].appendChild(script); ',
+    'document.getElementsByTagName(\'video\')[0].play();'
+  ].join('\n');
+
+  chrome.tabs.executeScript(tab, {
+    code: injectionCode
+  });
+
+}
+
+function pauseVideo(){
+  var tab;
+  var url;
+
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    tab = tabs[0];
+    url = tab.url;
+  });
+
+  var injectionCode = ['var script = document.createElement(\'script\');',
+    'script.src = \'https://code.jquery.com/jquery-1.11.0.min.js\';',
+    'script.type = \'text/javascript\';',
+    'document.getElementsByTagName(\'head\')[0].appendChild(script); ',
+    'document.getElementsByTagName(\'video\')[0].pause();'
+  ].join('\n');
+
+  chrome.tabs.executeScript(tab, {
+    code: injectionCode
+  });
+}
+
 function sendPlayOrPause(player) {
   if (player == "play") {
-    chrome.runtime.sendMessage({
-      msg: "play_the_video",
-    });
+    playVideo();
+
   }
   if (player == "pause") {
-    chrome.runtime.sendMessage({
-      msg: "pause_the_video",
-    });
+    pauseVideo();
   }
 
 }
@@ -211,8 +254,8 @@ function goToURL() {
     chrome.tabs.create({
       url: myVideoURL
     });
+    // /setTimeout(pauseVideo, 6000);
   }
-
 }
 
 function addMeToSession() {
@@ -224,6 +267,10 @@ function addMeToSession() {
       for (var i = 0; i < 5; i++) {
         myUserList[i] = data.userList[i];
       }
+      myCurrentPage = "page4";
+      chrome.runtime.sendMessage({
+        msg: "sessionPass"
+      });
     } else {
       myCurrentPage = "page3";
       chrome.runtime.sendMessage({
@@ -231,15 +278,28 @@ function addMeToSession() {
       });
     }
   });
+
+
 }
 
+function exitSession(){
+
+  ws.send(JSON.stringify({
+    "sessionID": mySessionID,
+    "userID": myNickname,
+    "type": "leave"
+  }));
+
+  ws.close();
+
+}
 document.addEventListener('DOMContentLoaded', () => {
 
   myNickname = " ";
   myUserID = " ";
   myCurrentPage = "page1";
   mySessionID = " ";
-  myVideoURL = " ";
+  myVideoURL = null;
 
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -275,10 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-
       if (request.msg == "request_userlistFG") {
-
-
         myUserString = formatUserArr(myUserList);
         chrome.runtime.sendMessage({
           msg: "update_userlistFG",
@@ -290,7 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg == "generate_session") {
         generateSession();
       }
-
     });
 
   chrome.runtime.onMessage.addListener(
@@ -320,26 +376,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.msg === "pauseVid") {
         sendPauseRequest();
       }
+      if (request.msg === "leave_session") {
+        exitSession();
+      }
     });
 
-  if (!local_dev) {
-    chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
-        if (request.msg === "verifyNickname") {
-          addNickname();
-        }
-      });
-  } else {
-    chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
-        if (request.msg === "verifyNickname") {
-          myCurrentPage = "page2";
-          chrome.runtime.sendMessage({
-            msg: "nicknamePass"
-          });
-        }
-      });
-  }
+
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.msg === "verifyNickname") {
+        addNickname();
+      }
+    });
+
+
 
   //var intervalID = setInterval(checkForUpdates, 2000);
 

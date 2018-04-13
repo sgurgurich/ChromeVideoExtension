@@ -41,23 +41,15 @@ function goToCurrentPage(page) {
   switch (page) {
     case "page1":
       loadPage1();
-      disableErrors();
-      disableLoadMsg();
       break;
     case "page2":
       loadPage2();
-      disableErrors();
-      disableLoadMsg();
       break;
     case "page3":
       loadPage3();
-      disableErrors();
-      disableLoadMsg();
       break;
     case "page4":
       loadPage4();
-      disableErrors();
-      disableLoadMsg();
       break;
     default:
       document.getElementById("page1").style.display = "block";
@@ -67,7 +59,6 @@ function goToCurrentPage(page) {
   }
   // Set the default page states
 }
-
 ///////////////////////////////////////////////////
 //  ERROR AND LOG ELEMENTS
 ///////////////////////////////////////////////////
@@ -82,6 +73,7 @@ function disableErrors() {
 
 function disableLoadMsg() {
   document.getElementById("loadingMsg").style.display = "none";
+  document.getElementById("loadingMsgSess").style.display = "none";
   document.getElementById("urlFound").style.display = "none";
 }
 
@@ -108,7 +100,5 @@ function loadSessionIdElements() {
 
 function loadParty() {
   document.getElementById("userparty").innerHTML = myUserString;
-  //if (myVideoURL != null){
-  //  document.getElementById("urlFound").style.display = "block";
-  //}
+
 }
