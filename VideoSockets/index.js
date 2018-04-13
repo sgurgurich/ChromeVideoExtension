@@ -24,16 +24,19 @@ wss.on('connection', (ws) => {
             switch (message.type){
                 case "newconnection":
                     createNewConnection(ws,message.sessionID,message.userID);
-                    broadcastUpdateGUI(message.sessionID);
+                    broadcastToSession("updateAlert", message.sessionID);
                     break;
                 case "leave":
                     closeConnection(message.sessionID, message.userID);
                     break;
                 case "play":
-                    broadcastVideoStatus("play", message.sessionID);
+                    broadcastToSession("play", message.sessionID);
                     break;
                 case "pause":
-                    broadcastVideoStatus("pause", message.sessionID);
+                    broadcastToSession("pause", message.sessionID);
+                    break;
+                case "restart":
+                    broadcastToSession("restart", message.sessionID);
                     break;
                 default:
                     ws.send("how did you get here..?");
@@ -53,16 +56,12 @@ function createNewConnection(ws,sessionID,userID) {
             SESSIONS[sessionID] = [ws];
         }
 }
-function broadcastUpdateGUI(sessionID) {
+
+function broadcastToSession(message, sessionID) {
+    
     var clients = SESSIONS[sessionID];
     for (var i=0; i<clients.length; i++) {
-        clients[i].send("updateAlert");
-    }
-}
-function broadcastVideoStatus(pauseOrPlay, sessionID) {
-    var clients = SESSIONS[sessionID];
-    for (var i=0; i<clients.length; i++) {
-        clients[i].send(pauseOrPlay);
+        clients[i].send(message);
     }
 }
 function closeConnection(sessionID, userID) {
@@ -74,6 +73,7 @@ function closeConnection(sessionID, userID) {
     if(ws != null){
         ws.close();
     }
+    broadcastToSession("updateAlert", sessionID);
 }
 
 //start our server
