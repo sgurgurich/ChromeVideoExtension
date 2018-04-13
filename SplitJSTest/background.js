@@ -57,6 +57,32 @@ function openSessionConnection() {
   });
 }
 
+
+function goToVidStart(){
+  var tab;
+  var url;
+
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    tab = tabs[0];
+    url = tab.url;
+  });
+
+  var injectionCode = ['var script = document.createElement(\'script\');',
+    'script.src = \'https://code.jquery.com/jquery-1.11.0.min.js\';',
+    'script.type = \'text/javascript\';',
+    'document.getElementsByTagName(\'head\')[0].appendChild(script); ',
+    'document.getElementsByTagName(\'video\')[0].currentTime = 0;'
+  ].join('\n');
+
+  chrome.tabs.executeScript(tab, {
+    code: injectionCode
+  });
+
+}
+
 function playVideo(){
   var tab;
   var url;
@@ -375,6 +401,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (request.msg === "pauseVid") {
         sendPauseRequest();
+      }
+      if (request.msg === "restartVideo") {
+        goToVidStart();
       }
       if (request.msg === "leave_session") {
         exitSession();

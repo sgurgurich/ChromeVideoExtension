@@ -100,5 +100,4 @@ function loadSessionIdElements() {
 
 function loadParty() {
   document.getElementById("userparty").innerHTML = myUserString;
-
 }
