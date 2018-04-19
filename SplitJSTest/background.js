@@ -269,10 +269,7 @@ function updateURL() {
 
   console.log(mySessionID);
 
-  ws.send(JSON.stringify({
-    type: "update",
-    sessionID: mySessionID
-  }));
+  sendUpdateRequest();
 }
 
 function goToURL() {
@@ -316,15 +313,11 @@ function exitSession(){
       data: {nickname: myNickname}
     });
 
-
-
   ws.send(JSON.stringify({
     "sessionID": mySessionID,
     "userID": myNickname,
     "type": "leave"
   }));
-
-  ws.close();
 
 }
 document.addEventListener('DOMContentLoaded', () => {
