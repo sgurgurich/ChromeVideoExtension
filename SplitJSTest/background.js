@@ -310,6 +310,14 @@ function addMeToSession() {
 
 function exitSession(){
 
+  $.ajax({
+      url: "http://vps.bellisimospizza.com/session/" + mySessionID,
+      type: 'PUT',
+      data: {nickname: myNickname}
+    });
+
+
+
   ws.send(JSON.stringify({
     "sessionID": mySessionID,
     "userID": myNickname,
