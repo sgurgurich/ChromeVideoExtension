@@ -7,8 +7,6 @@ function startButtonActionListeners() {
   document.getElementById("joinSess").addEventListener("click", joinSession);
   document.getElementById("createSess").addEventListener("click", createSession);
   document.getElementById("submitID").addEventListener("click", submitSessionID);
-
-  document.getElementById("back2").addEventListener("click", goBackToP1);
   document.getElementById("back3").addEventListener("click", goBackToP2);
   document.getElementById("playBt").addEventListener("click", playRequest);
   document.getElementById("pauseBt").addEventListener("click", pauseRequest);
