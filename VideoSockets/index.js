@@ -38,6 +38,9 @@ wss.on('connection', (ws) => {
                 case "restart":
                     broadcastToSession("restart", message.sessionID);
                     break;
+                case "update":
+                    broadcastToSession("updateAlert", message.sessionID);
+                    break;
                 default:
                     ws.send("how did you get here..?");
         }
@@ -61,16 +64,23 @@ function broadcastToSession(message, sessionID) {
     
     var clients = SESSIONS[sessionID];
     for (var i=0; i<clients.length; i++) {
+        console.log("update number: "+i);
         clients[i].send(message);
     }
 }
 function closeConnection(sessionID, userID) {
     var ws = CLIENTS[userID];
+    console.log(Object.keys(CLIENTS));
+    delete CLIENTS[userID];
+    console.log(Object.keys(CLIENTS));
     var clients = SESSIONS[sessionID];
+    console.log(Object.keys(SESSIONS));
     if(clients != null) {
-        clients.pop(ws);
+        clients.splice(clients.indexOf(ws),1);
+        console.log("clients after  count: "+clients.length);
     }
     if(ws != null){
+        console.log("websocket is not null");
         ws.close();
     }
     broadcastToSession("updateAlert", sessionID);
